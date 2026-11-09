@@ -7,7 +7,7 @@
  * server) open the published site. null = use the address the page is served
  * from (location.origin + location.pathname), e.g. to test links locally.
  */
-export const SHARE_BASE = 'https://sonatsuer.github.io/half-pic/';
+export const SHARE_BASE = 'https://sonatsuer.github.io/exquisite-corpse/';
 /** Format: size of one half, in pixels. */
 export const HALF_W = 128;
 export const HALF_H = 192;

@@ -1,6 +1,6 @@
 # Half-Pic
 
-**Play it at <https://sonatsuer.github.io/half-pic/>**
+**Play it at <https://sonatsuer.github.io/exquisite-corpse/>**
 
 A fold-and-draw game in the browser. One person draws half a picture and sends a link. The receiver sees only a thin strip of it next to the fold. They draw the other half, then unfold the page to see the chimera.
 
