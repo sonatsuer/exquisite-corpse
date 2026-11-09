@@ -1,0 +1,25 @@
+{
+  "name": "half-pic",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fold-and-draw chimera game. Static site, pictures travel inside the link.",
+  "homepage": "https://sonatsuer.github.io/half-pic/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonatsuer/half-pic.git"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "test": "rm -rf .test-build && tsc -p tsconfig.test.json && node --test .test-build/test/*.test.js",
+    "check": "npm run build && npm test",
+    "bench": "tsc -p tsconfig.test.json && node .test-build/scripts/bench.js",
+    "golden": "tsc -p tsconfig.test.json && node .test-build/scripts/make-golden.js",
+    "serve": "python3 -m http.server -d docs 8000"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.130",
+    "typescript": "^7.0.2"
+  }
+}

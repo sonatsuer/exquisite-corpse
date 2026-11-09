@@ -1,0 +1,124 @@
+[
+  {
+    "name": "half, strokes",
+    "code": "IKJ_yWDkIWC7sp48mHUTZiH0I-NSG6865BBqI13TnEXqzwLaOjRuLXL8jQrHm0GOGM4XnbTsorVFM3zatuCRm3D9l_0xpu_4bnZfqL0S9sYqdZWMWY3hGF_aXsmB3oY4ESbnHe8k-iMNV1KOLKd72_ADCGWdVio0rX7M2P2kLCqXGrJB6udN69ZvcCZ7-vcNRLZZ47yc5as0HgyDTRIHecfHiglX7qG0MDGZ3XW-BkrYeAJ-KS2xrvVXp_ISjEZoMDH7diYzANplzIH8MTUExr8Sc8Bn8tog_TQno-x_lQhZFdX8KuTbXfY61qq2CK8ViDUnWZ9BdPAcmhxmm0wsPfpyyFR1E2FSSKWMd1R4O2JxjEBWwRKm2l0J1iOYnQGmPwA2J1SwY0bFjIv27BKH4V-qmQfKbP-UDbN3lXFzYbfOUHpETFf4eQFNuLgue-qvYAxN-7G0ar97SxiDOSF8jxGvMwxWFHeQataPj_Ankba8dDzYH77KfeBy55nX5SYw-ZaPYpzemQ",
+    "short": "嘨痼玃爡昮褩蛲晵務瀟序煒哫膮幁砣整蟄斫崂蒎煆蚵胼煂穹笆尘膅蟛憲炵彌藍磛溑瓜巙淴羦觾哧松皽劽穢矖掌摣民潿桞聠毨曠弦蟇泲懨焍揔盢肝觛言纆摵搪嬫旬腣认夊睱磉俪蟓沽枽縦泾絰茒葙蛯城撬舞儠苑嘝蟇翢溕涺澴娌枝菖谆悶喀埸眭穫絕沟耒焑璃仇襶垌縍瞗媁贌慐愚贒櫰呿奨滽嬉蠾翾挈摅歟纫狛敽熭梪萈秅暃抝枟幝崁聨橦瓓僃藩胈挝弶卉嚥焝荇滭灱焐卬削瓚敂止屢欁瞏縃暝抰曑穘耯蓬务谕貪朇肛巹帶腷獜收哟屐沑勅淡蜁慮如蟯碯昃募糆艪緞花瀌蜡洣缚諌婖匝蜆祚嶏訉蜛棱舼萇觬矷湲蟦歾折绹玣萩腺鸲",
+    "expect": {
+      "kind": "half",
+      "side": "left",
+      "reveal": 12,
+      "halves": [
+        {
+          "pixels": "4e2fa7e0",
+          "ink": 5544,
+          "signature": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "half, strokes, signature",
+    "code": "LGNqQPC3aoz3jhVYV1qZOr0nfhgGJMoZZez2jqz-ETZFkQLkU0uiIxfGSmbsDqPjQ1XZK3jEGT_cHKKsOTZouLjYTptzgUZ27llbiUFAiH5W167xGQVve2R4dfwe0Q3CnLROvg4umtOAdaIH8lG9X8xi4-MuYGxbGoNqyYM750XRZYM01e5kTu1KuJU4Am2_yzN7BeI7ADPfg_RHPwIAPwGjXzml0hTAK59HKYg7",
+    "short": "夘蒤凂蕪焽蛡捡敚瑎秒毸昆圲澖斳蒎礿漓朖异蜔芺嚌旆悙糀袏煃捶悷焐朿蔇堪绤葨簮宄衭膁徝糥獮坁帢嗥楞糱呁擷箑虵贇笐蔊檴憯滢衫憀歨湿坆譟脘簾媹湬擆瘶礦儻蟑欖搌苕覙勮茪蚕尀瓛贬腻佸熰仏涃謑臰嘀贁盗膚效拀壧色琠鹶",
+    "expect": {
+      "kind": "half",
+      "side": "right",
+      "reveal": 20,
+      "halves": [
+        {
+          "pixels": "37ef75f0",
+          "ink": 1689,
+          "signature": "Zoë 🎨"
+        }
+      ]
+    }
+  },
+  {
+    "name": "half, strokes with eraser",
+    "code": "IOJrufBqOnZo9JG5cCPoLaqxizH-HK3_Fz8K0r9NWdAkPYFtf_Kgt5HFcwzW5FNYLhPYU9rrEPLX5Lp9T_Lkr4UKVn10t1omNZwW8jLhky0x1_L1gAssOH5BzmTMaHpVD_RBh2c1x84KSBTUUXwzne1e59NBnlwFIc9cnLxTALoq0Qk_YrL4DeLsW6djUNMhfK1A9w3rvIFwt75c0ZuYEs14uUWP1IHsN--v5cwbA4Ij0vSHk_pF3Y5zouhatHbyP5u9anWjsWdJrlDA9lhVFYg_q_jzOiiLvZ7Z9kJA__ST6HYb6J6bzeXgCbAO19Z1LoUBMk2wUVskRlMIbRBtrCioNNpTg7NqeutErJSD6vAF3SMOWxumPZvxGDlvv_EZH1NF5tR3cxYc0A8Vu1LSfYzrT-X0ZbmN1AeVCCR_Db50aJZjcFZsZQfkhlkTEwY0gnWupAqDBTkqc32rlDYopmdY1AAl2Uh-ZU4gQ-jk8uCKYkqL5IL1f_2YcHTdw2AMWRwGi8HPwZzVA4xFqf0w8AmVzb7Hs5LXM6Mp2bKA6Kc4WDl2o5aOXcMDB-Ee10v8Pl2iuOEE4M1Qs8RoeHyT5Otjwxv8u5tSVEKBBIyakXjfsCTBxyiKLYdYFlqfYMQIm3CMUaoXCdz8-8g",
+    "short": "嘸璻痁砺殚嵉哥縣蠋梫听翾唫深櫼壒緓掝亐讁楟贪僞必櫃孮彍昮勶匽禬廲菹妧茿胤秡庥柵芷撉煙繛耲虤胓啟胵渂胃濹俎朳咇睔巴幡葳攟尊怅孅台膝襗籽嬆汜佈櫵聲詓丮炭判赢窾仞妱榧曔嬲史筀诃治者纷綗嬙籠惍氮托赒俬寻裾攰椃溈謯怞懺彷曧岋癚笝紣豮譪歨褖欦籐總玅扖嘿磾崳皢妽疶浤圃跴狺啡綢沛腹氀瓀峗莝惨戄聍稔掲弙愈楄哚红瘴蒔蘻宩裫弫坈嶫縅蕈绥穮琽瓼徃玾跱呇茴斛扷櫅濍丼掻抴痘膭工謙榘蕐喕倉嗰蓹艨玘蔅枱猇蜡玑婌吴溝棪帪儅届男蒮戶堩瑵煐严葒嗦挸湃蠹崮倩灊烹嘯揿讘樝寜宀婙唁皼唿侜荀蛄撧謰訂杜蓻喳犵脺媧枲渺塳潠蝶盥盥蔌儇虇筴緰豝皮尐憃子竱咇濲懤裘許緲覛投刨划媚牞寻亓俇堢烘歠摚痘婀灭續扪潰畳諻耀",
+    "expect": {
+      "kind": "half",
+      "side": "left",
+      "reveal": 4,
+      "halves": [
+        {
+          "pixels": "42f79d70",
+          "ink": 5830,
+          "signature": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "half, bitmap",
+    "code": "IKWcKBANdsmwu3BP44zD4nVb8Ftum0AVW72al74zd-kgz2SQeVuWZOYj2_r_qQCIBWD9_DmAidcm0R3dnHChS5RgsrhoObH3Ppbkqo5rtOx2rwCrxNTbWK8YVYlFh8kF36r39z5OBxlG5rUj1iFmifXuYq3Qxbtlzju3IxuGz3A1h_TEpNQngGeEQLoltL_ROu2ezclQd3jRjbNhc_jeM8FW7wAB4Ju2iUH9E-izDlxN0CQH0GPOomh9CbZP5O3Q3rPw9hI-PHv8eeEVU1oXysXuPbddJHbkm8GhMvuIBerzGFyYR-v3U4CEOu1wuCcyEFluv5fQ9WzZ5dcOd1ld82wWQ-ZO6YprcMUqxQ0_tGDgFOmSwry9ip4mX5y8xoQ70DInI-dj86qy_Een1rMKScP6hDMUsKvjW1NdirgJ6Z3GwPq3vG-FXJjmhoKVkHZvA9RebYH98t4rPGmj1Ri7uE3Zmnm4mIUpi5I42f5Pm0XikazsZpqJCbZuXvy3DceMHF4JHVQ7uDZGw4Oq-pbIpv9nfHB6ImNEN_-FcVlIhRxGmomiro5gZ9xST4af0god7Cna5ZR23qf5A4GicctzTPeIUUSASwvT7DygvHXUY0w_enrJlbq5zwFniGRQZ2iIG6waLhkREwBhAnh31HtXKUXVn1n6qXqn97GNv7G8rp7qgRVTZnxYisJgi4RBfaxjZm95upPuH2qVF3JAzth4Y4Xf0QaCkdINMthmIISWp2RGskbyJGqhTd9RBdkHaVqCWwzMZ3PhlIildGGVZupoAHDhfrF3P5ocsYYZrieXzohuu04ZopvdvkqPYMEAornbNgfVu4fJFUY9eM4MDWuVbKo7054fvJ63eSMpHgSlXqKdscRHBKZMoBF4GYzvR06RGu4DzVvJNNLREPV9eTc85hWlEM_doG5Oz5qzGsGMX0NV6RnqvG6sAiQLgqvbpXuui6Trlodl-reaAZJ1HGgwAJexz88maLtADiuqm3i5MSICMvbN3F2wnqyp13tXzlCZxGVhjWQ4eX6Nwiyp4mDX4ney9BMm8Sp50DmGpEV2cgCqfKs_qLMFzAenAcjOQFFsrETUTRnRM8m2NPGZ6T7k0yyNDr_HbmwAI8ZQ4GdD_d-nPN9-_VZbDTk7wR9RDnFygtTfhq6rcfX-qb9Nny7BUbOz8JLQ5p8vAQIY8p0Dw4jecPibcZGz3jTomKGXG13kdWbGXD_pskNJyZ_grd6lLLVwacO8OZLaUFo4Bc1SdBYKUYrdHXkM3ZoRPdnITSp1YfbrC9NU5qSvtJqFGY_t7X0_2_ukVw4UOVxIirPb4W0",
+    "short": "嘩柂湀孶聬妷伿熌绸畕緁楮瓐何糶梗綌蕾犃嵤爞掹枓琣蓾緺爂嘅昿淃琂埗垴忝葱纡惥吋壡瘹穽臩榒碎棭峇梼享缵宵炼晕灑晼爗涪诽臤蘜杆螭怽暅璉譻琪蕃去杳熻檌榆臜兘淓劤茉蘆民人坭姽勫箞腲指毣徍竘政煸臁掻縀喂榶灐淑嶢脎攓欂帟幣膨璇舦葏蜻欍裏绶劏燇緱蟡協莡洫叮嵭菒忛犛繨愯簠只諆叉漟秷拠噃禵纸埌漅玺趗舽操疗攎毖揟宰摃螓粘瞭绅墱廓賑滠区本売變疉珹胳咄峴儢檏畣諪礯缞痖竂犜巪刳匬墾孭慝炮亞瑷哀貭视谕檘螡瘩摁葯仵另萇诲薊臆璏挘糮勝瑩螸琡悘籈蛙趓螴斊徬褙瞨爦葮斿奰蔞娜斂忕廮蘶徰蘺秪擈瞿葷翁蠢曑兿谕罙怡忄桪垢禣理浱恏澧謠癷稩蒹杇楺痹仠栧唭腌询匔态夋苻凊僱菔曓凷矫垕粮櫰厞噤戙蒈湮稚妆弑威漂氝譇筜睅荧莟碥袧诬曛賆誮疺瘑捍瑼搢稦倮剁浫吶枽螺狻濶硔敲帳箇澎叟艁瘩啈嬲萙瀈恚畤徬牯嚑碡慷茐敤啩撠现脱畳虥嚊揑澕枺璀促潾穝臹癲羆呫灹洺噮糓澚塯殾患萌刂点蓍湽擮嗉卑燗焸娍棥擊盯憞嗯埫毤焩喁塕袊殱缑繊朲渑氆曎謝岑咻渼药圴芴式揵蜷崹潚扃川瘛独豪脚繣叴字眙袯哪縈爋溪论揮粋眺蝨殗袷璀朧扱瘰严褜贼瑨糐仢粪楸籌怠囋蓍蔗椉袲矗法諥偧剥晣摃濥貍纋增垃既毬絁媛缪汴冘梑卶檀墧肬趨竁櫀沜俈膐化肱勔慆欓崦萴試沓覓愬煃秼殹稀囱猎依函藩臍读譖擃憓約浑农攨奓涆禪蔟旺瞿慧胬卆膳訤笎桼紁了崩舏冈薜嶉篆徳薍岉炆攛敹啖椙樿衬爴甦淠祷硒胕繩绯写奩幚封櫕埐搊扢篑菤嫝璄懝甡嬪歘浮稯慔螩壻恪匙燻泗苿槻眕绡廥橈炬设厴",
+    "expect": {
+      "kind": "half",
+      "side": "left",
+      "reveal": 12,
+      "halves": [
+        {
+          "pixels": "452302e",
+          "ink": 11922,
+          "signature": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "half, raw",
+    "code": "KAZQ6o9b3B9Vk6EnULIrsYwDxvOo-MaFYDC_ogzu_KgcUDRbyOJhBkzPPrtlUhvGFLA-V1XBrxpKnJtkb7sHIGesFgD1vD8rvCe38AHNiGg7rqZm9Y4pWWvI3IVnM3f8cJdtrCiB-7gLC3DX9asI2d4BXQSZPIY-4piIt29Ap0grrTnmIggnzVPluf9HSh-YPi09fS04Ja3WiT8rk7q1KPNDsBerBj7lzbjQIJN4-vwAqNQq1Xx_RzUaMEXVwKdf1VD-NjCzgN7RPt86Iry5OF9m8-yBcjxKp6WifJNiTA4rz7adZJBK-BKkv2u7KmtYKukgOhZmGfpbYH8HBBeFf3GbC_GYh_Ndsew2WTc_l9AHrN1zG8Xj8hIPpQJ1Fr_YeO6GvhWDw9qZglrq7gc35nKWdSg7ZOQKriY9y-TDwwUDgIc6Pw1mwxy9kMUAQVLwFd__QUeKEWnHmiCREU_gXfm1tW41WVMv5skDYQoq9cVSPTGT_Xob79TR6kyIl4drVrxWAJXDGJyxdQJU2zEZ7EZjNeL3avD5x3Gx4906ycjHrU9EjkpYe0RH37UhBwfaO3S-tMWiO4D3FbWTz8LBOpA4Juih_5wlvKajUSSLtF9vdEEC1bYcDd5qxcR1DGtQlZM0IxuEaggp8t5aH20Xj9sBcORLH-3QkQE6oQwxQhfRjS68y0H8JyBShHS3Nx3njADAA00QSuz47bGB5ZTVlV8Fos1BBTxRqQSvMTZDaxyYKxwYj0oyAYb9rmBdUmyzy95GaO-Tzgo2plkrFrcH1vtNG2zldgisZRPkkEC5Xzb68bG7kKj_gop_W56diy5zGee-MijEGoNRz15i5oc3V4R-HY5M_6RdqO7zunDPk8dZ-tJ6huI-Xl05opLhQmJc5AZsEijpLpZsmnX1mzSJUTmaUVH91J-29tA0tp6KV-T-b_ebD-9WsRG7_Iwt8hck_Ac0EE4MJRBq1AHpinWdMAtmRCHhnqbQdenqmvDtfXMIDTGaLlVAXvrkC-DSTMTtgTZeQbOKFsUdnocPHl5waPQGDe9y-hOrunuFYdo7okfp2Gjfql5e_X5MlUxiJ1uXfwL9OTqLyk5u-soKt8unnBwlHLhHbDUu1f2yziA2ycrPu-bEXQf21UahVv1mebf2URpzu0rz8Xp7mbZQH4Y17rNAFgPc_auiRVMB2tNHHmvhy0yk9xa2DkR4PF-q36VApw9HApifHwr2zVmYMIDu9AdOcYgZlg-OAt7vyoP9AuLmCX9lH2SToY9CoQtwl-rqQy6Z5v3JeRlEyM6QC-SDmWisyeaiCz9jKGZ1gpdCFgChmVRwx5AWn_JI2ACSVjhQX8HyBAcwDqO30PmqW5-oGJ5iYD0vN4-UnIKsTpe2CreJaluPaS7NHj9iUJ9e_TvWTV5AILOAdszSUSZcqo5_IasWvRPtQW3qznwG9wIj4cSFtB6oD2i_ONT83OiDRgOtUB9jDmDRNvPcp30bjcxmE4u9j9YV7Xo83n0tggS_vBGDUmQpPXY6Int_V2J07sWhzTVUZvSaL3QLv2nhZeqpedmyHkgQMPWagvZ4G8ukgjsf5W1z8Y_80DrLs2-N513oQ2AIuj-uOvFFTIP3473N8VBPtG3KmKfuczaiEhDcFjeeZoCVIpUuHyfZcH8-e0FiXa6NCTGq2lOHXgw-s3jtFGijARRde-7xXthhSU1ZbRHTkMYvokk2Wou7d30nB1LmsB0bqAbHGg8D2srV5FeCpr2v7udZOEDd5GEcFu8TUoR035A1iAHCKXeITp_coE9ZcFg_074A9I0M6Mf1-FRjxhCE_Jx5hfq3I_72oSfX9BdElj9UgERQZF9WxcGBqgq5bE9_Kh-6uPMbt2s6nAov7dknrprkBQ2FqIaaeotbjv7xV0R9MTmvUp62Ut3rY0ywF0_CkIrcAvO4JZcYvCLs4HCg8Gy3YXdf7m0nLHpMfY1Gp1Ijd7_XHLW2f1JFdf07Jis7FdE_bAVmNmpBGlERCGlBMBOTQIP5dKtPkrImzD7faTv3DnkVZfXPvltV1rISQvZkjc4QVXJH3878Nada5AZ3aSMeifEfIj8q9SInbvU3euvY6EX--BGsJMKSUe-YebR_juPFJ4I0lnzVGYbeSO9a3tRqgxlFTWwYx7HXpvN-hcTWmTYpVwd4cdj2xG6ztJqJyFizRNhiWb9H2OfJoQqD_bqOE54SU4-gtE8X2UQZ-c04Tuhrhz7_R9Pc_-TaOm7b-74DB4xAnGBjTsWqT9TRd9YWsFvVMn-B0mEaS7XNxjriuwBsSxEd4AFTL3D6jqOb8tXEZhkgYpVEKSFaMxBFidO8wK8TGWelosrAk_XYv62jGMWONyaMoOquDqMq3ELJigkp8Mi_gzu3yoMixvfVffRlCyi4havDeJz5BTSjMmwLXa9qS9eAwIVAD8GGo41pAXTAXGO1MY-GYHgDNpbdMUDdNSPmgWT-ffnEaeq97O2zCYtUPC6dHu4WzYChtOn9167y6EPWSrohqqexogEs1EQx4fK1kXFtAXemByWtQbkM3F4BvD9D3Y75OxqTohmkCw6Bxeh_SkzNXVplbeP22nPMDu1RdoFQ6CdO9o2DfHqq7FFNlf4UEhmqOm5ZofUrIN5JszH0MlvoEen4Q1YkgLz2KrDdyAsy6R4IMwuSBXRNuW0yl3Xcd_dPKBmbeOcOCTDgI7ZRpW3RYLTQAqP0BZky0A6wGOJQZ77tWesxexuiI4LkCQOa7_jo_j_Z_GtgsP6IE_nCzx6IHP3KLMXOpV-3Q6uwJhNn4-fhMTQ6oF5w_QPjhSzFXr82ebeXWAZvyOVSfHEE5xnT7_-BjQf_wAArCbxkLEouJeKuDaSaPArhRkED2dEjFjBLH6Dhp0inOktIyidbV8g_y09VQ1LTZKXcig9j1FKMqJGrJyc-HiCn0LLTl4aOEXGDSp5fQrGgOkN0oTN6kwED07UbXwLbzGXa4rsKSGp0pJUU3gMI2OJ7E0rqkPK4H1NlS-HkV8DbRCAAQlsjxzPEjy3ECEOO_iBhWG9eizLuuiGoPjsvWhkqzE1zkY-55X1AjnPMsm30k7WZy0EQI_JkL-ADjNrei50vtaJTOwnMvgJCmX0hMhQgWvecaCg_Bg9hHQeKMi9kXcO4iDK6LE8qFkBSBf3p-UySYtEGk76izl3coc90YjUdXTAcpslzmGhsCzM8e1oF8IZCaS8WncJ74We681LProknTSAdFX4nO6bwiSvfHQCt6cZvlRIewJee31SNMHE4ecljsJ4bfc5rgqnjaAW-NtyvxZTrzyGZbfJOlllkwhu3sEPm8K6kRAZAKbI2S7jpv6XI8bc0nB0p9XwimkUGY84aPTjCNMJ2dlryLJyOw3_J_vzn0AmzTDgiXXlEAmn_uiVinUQRf_IORldpOBfVSjSICYaeRpItXg7U2RLInTl2WjsU4FOiybR7juFhOq6zjqt-yAoVFMxC6p5m4QTl7-K1HzrHtkL42UBELNMpKiuLjAN7OwL0LtJZgvsOHx6G2IMVFo4KOgRFgUcQRv4fwU6I1lKQjlJ6AtSSzvg4JM2kfrcUh2DxcylJfflrErkV0gmhfWhiti8_hdfHMDluwnMXfBvEmgQIJnGDLfZtmdek-B_zjbbxzrVjIcv7MFvZffOdzrIq7ANnlnKsu8FtkM8vCTGtIUv9qouzdRsEF8QW3oolEI9-Ti0EXtpeg0gO64-CKktxX1YxGx8PC-O_m1zXf2UtP18YYyJNKE44FsyKOPENBIPWGnU3DIrkRPcLXyqldJFV5z_S7cIhLHCVDcHUahSSg4N8bGoGGNbsNr5Ewa0OByT72Vnh3c1Q5Z7D7yS7ZG2GlbCfGEYnj23BjDTlI-7f247Q61SIZmlwgpxX17oXuevHD4ZMD_E1pNDgoTZXItX8cYHUJa3Ver6bA_NzvKGHwzlswBzyqnM7N6v9PhwPXtY4IAPG1-UEz_dOcnxuv_oWYMjmw2utbmvwbx4PGm_EYcqtPLx8YRPGt6-RfKGExb2Ncol4vojFy5blRq-zeMcjV-cFhQUPvglEs21DWgmremtJQ9FQF_TQWf_B-4J38e1w7ed3b8h4mw4U8A",
+    "short": "堁猎砽槜嗕机劝庲壬曀崛膨谱癖仂趢儻緊湱帴擲尦则嫏嶮葕噯吔稏獵攆級悧垶徾複嘙裁昃莼巊观泟縁腢咃粺瑦譣炕环囜潙脷深纗楫傈嗮蘋僜孿撬囙薀提恤誆嶸瞈烝絀矒傺苧琢倉諕嶖蟿忒濹滸笽测憂撷撉巊蜻磔盳廬佺稘賥腮嬂偍蛺贀墍庫捼淑腑盁叕縩菽捃谶娬蘍襄賟岈秋狡浦諻嘗囱墧睨痉安娎壳襩莒幊谄硋议褪棖傮犀蠖枆涥箁贇伅虗识椋試噿孶翬宖慳豟帇礷攱紗燲劃衐埔撿萞峨棸掃绶瞘坫磮俍豧塙茨峙局碸琽胹娼娔冀濎燰莛儜絤婐伅惰卷跴匞堑桱螢偄彏蘗涛擕簵摔胾椤兡傊絜捈謱狿斡綿拑袓嚉氝祖紕渉攌暜穝帥慬缙褑琳斋蕪訾橷哇燝岲檌沵嵄熒率笑嗟筈幰浨襴維婚囮价卭朼贋伺爎偮炇趜坯塪孄犋笗蓷弄僕箇仝螫叄歃咵偖愴囆虆瘠矲薖濶艞巛乜屄穿篐牀憪到罂叴曒裳奁贉者堑芷寇汸縃七慄劮臣箱湹杍摕洅皳成拱復伫脓服礜琊翁瀽堲乡線螁歒椬誽蜙盯狳溣梙末厭繽槭嬛椹敠炱猓蜤刋獼蓺詬榹傣趂炟莹衶央櫆汻蛈盄咠茜譹烦濍荸忸殎愿衅蒣糳粜嫹崝柺芞癮囹汝屨眮匉灜蜁瓁嚣眮玛垧旖椴灔憙睅忽茧襯楀芶疢獾懹緷瓃賵棄徻责僟噜狼俍伄蘰猐梵丞琩莝娂葤庇澞瞴啞疪棰襟攰渴羚妕戅觫爋蘴狌憶伶斐椸癛匝疡绱蝹繨謁滞诋蠓磮疸掇栻皑貝澣涪斗緗蜲捌暉莹毼僽屎皼眹糺肂祼粞樜均妄殰茮荿椬蚀蓉肳覾椑欇讵扪卛警汭赥剩膻悼贗矮架戇虣斺腀厀诏蒮灅拀殭嬜汫虲苊懜撶冑喃罾磟睐塰謜傘症纯椵枘娠峯帝山瀆杠谸僞觲瘿舋烦偟葑讒憡燐砐篂旪袐胩疛诉汆扌焺帋蜠螖炳埦皂臶媡瑵溥舡昂澙挜婹乚淲怶三坘虐旰洠帜縎盭謏璩榟砆埦垀謯寣蝉耊穎班溫氥硛燚惬艸赢戧華苯摍斐個封蓌芔恥肪屿噪罫艏筁楺竧縛蔂囸橈擐沨凚姳煓諜蠠艠岵帟曃琍勛臜矟徸蔱琓烯曽晗筺崷痒萈势約昵垐眽殎瀧篽敢欻穚唴荔枽垢诐妿桸摞碥蟙窇犁仃莚溽疁紮犂峇豖菏羏贴冬糍綍蟗沄宀嚺巫熯匕媃诸觜藅幏笛檩炟米宨漡兰搷疙瘉把挮嗉讗俼豻幘珚蠴圱碶猸歸娾竞峑徢焁北斾觅泘晒拕玴忓爱烺圤葚烮蕷芜啒螬俑粠哇咃總礫揤揠硫蒿糧摎刍薑漜去缵堑苟爍暀唈睷瀓矽肁嵙樖函峸仴煃岌淗虔曱漈懲橹潾祲巻蒡埵赁欒搿挠剅侑浖罰昚瘪蝬懟股質蛳哭蒳硰堯襶恺衫爅兡梈桩袋擣緯卝剽婎棵塺葒蕺萴胀敏纤嚭縋膸坥羋纋章樨崆胝潷旻瓒檱行浣扪歈煷緵翋擙赒彝淓窘礻却懶縕琶梐徥剄噩幌伹嬂凹欪苹壈瓌嶷蒓緜屹卙浜賹楕莬漤姙犍膄南土淎贍桵禐呷案翨痄洢巊絒嚝糵寞粽熡叾谄棂愊恑触喛忾峣罉蘣恙諕呡篤熽棞茚瘱猕孬吱褝沛腾潱孩狘睗俞唝燛剮竭垨甡暳弶吥瓽嗘蟲栐砏论熄蟡坎嶠笓罽猐柹腎勮澮唾跑謽臿狚岛箿糸儇焐埆侍峅碓譍叟搖稖譓埾俒晆犻攷吺蚮縆缬弝蘀挲诃袎盦购攑琙嘘睔庤潚嫄剘畎諀秄羖沖烊縤赝烾箣吱曣檚媠被滪媫橂聢溒痃嚿滎襼砌烆诵旟徔夨簡梼寢櫹位堳垰奝秚犽氃亅布記梎孩九娅美茱燡琇渌蒖蕌戍苔燦湙巧藧剩袯泎蓌型挏僩艻簖腠堛憧诗禼粄嵙墺噪硻咈伬茑儞嗊莑橛帗沘唥祐榐腱氁紏舽萻蜻咤蠡璐夎湱沇謩嫍敖瑖薏蓚櫳仮荅蒁戺側觚它洞碮罅宕超伡璨衮摨浒窃汉竌浃坯瘑衾刵暒亼變礍蔠夲衇溃娮怅欓榖苊敵蔝赴誠枛氹绠狃渣箔桖蕅溴舀砿帖朲舃礁熉幧綻掞竅褛皈蘮帤冚觾岏蛿柼棘夏蠠懹纳翨湳诊失櫪捾蕃磬偡実燧虌慃碁汰赀谸抳卞緍疛汝昆槲展埱缄蟆款跾侍俿言京垼朋劢蚗炮兩垣縫潆幀讝劌搰惇蠎咝嚧岒芌皝楗耏誴譕兒苙塝耨嵣茔益灆礧埏濢傟庲若虨虅羃悧珴壆渺廝堓寪愁仴襑筼僛脙殮壬塈條塉打氃倶尧積壪爼禁譍獋虹卼六删丐玲崜臄燋橀漎峾嘘掆譺夲覮瀚滸褯撆悬缵膑燮汗茂屳脬瓟恎莙胐异巉爯蘀蛍祺妝姭栥嫬埌綀爩珴漲匈厯汱瘨巁滶剴喊媋葅蔎蚈媮烄誨摀抁淞痥媒暴幩峺烎敷堜译瀵啗愁肛坳琚哀竌詻撁洈有眯厧樧綅疺諔竺蠤畍嘇彗蚜覦訢悽詴亭衱瓹扈泀珧篵怴繱尞檖峂氛浳璸墧煨佯煭肿厔裳耙玷聎玖摌噮薰廹紊袑分帊椣朮蛩緩檏哜芜啊浗纊桅侘諡直蛂嬰畧杫耬産稷货購蟴些嬰蘢敞所垧趺坘矔幅跲冑獶狠旕悍嚀琚汆犋揠襓朒耧憗杨褔蘔蠬瓑覎虘憪裎岫液亡打婂袧瑮刓珯蚭忳礞葂谶戄庳愩墊蚸縍褻亽僭坦僻冇翨楢儕厣溣瘑厁忄副虿低瀵猩倹恺亵圬觠蘤腩嗫橒啠詜肔珷蝫劮彝嘦潽栘祢諾受翌冖褉脗洆詉瘐嘦橠胟架柗眾俿尶蓱膭搲唯褰擶旟屷岲墻丶汙肬糰擙儼紉婫怔緶碋竝徰幟刖薢灑倽豎奁叭睺先冺蛸嚩奱旕焑穼崋蛯螵腝赥奏菱澌灍堓熁椲堸詃幈嵘桵寃嚮弓蔋旊硗恅揧巴糜嚄穰獃樝徨抒滠藆羨吘莻八蜓侭冁聏絥柡蕳挎摻凯圮葆萚掰痆剢氽篁焍屒嶻淛熴岵怡瑩樠矅浞蠗籺詰谙娏詍桍冂漶揈筟翆俔坫歗磺椃諜觊吟儹椰俏墩脻寪跓虰嵞莎倀崛日伳赴蟉詮緾潦儣瓃棫擦緁紞准瓼徇墭崯嗆剏咷秤旊吓厽煜皗烺囅胥籔梾腸翈荾樖包凯溔惍筃撂梷瞭坃艔使慁柿繾蘧淇筰襹蕶贡蚛内崀",
+    "expect": {
+      "kind": "half",
+      "side": "right",
+      "reveal": 32,
+      "halves": [
+        {
+          "pixels": "69e36a5c",
+          "ink": 12202,
+          "signature": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "half, empty",
+    "code": "IKPEDw",
+    "short": "嘨詀鹸",
+    "expect": {
+      "kind": "half",
+      "side": "left",
+      "reveal": 12,
+      "halves": [
+        {
+          "pixels": "6ebed2ee",
+          "ink": 0,
+          "signature": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "chimera, mixed",
+    "code": "NHl9CzJ13GDkIWC7sp48mHUTZiH0I-NSG6865BBqI13TnEXqzwLaOjRuLXL8jQrHm0GOGM4XnbTsorVFM3zatuCRm3D9l_0xpu_4bnZfqL0S9sYqdZWMWY3hGF_aXsmB3oY4ESbnHe8k-iMNV1KOLKd72_ADCGWdVio0rX7M2P2kLCqXGrJB6udN69ZvcCZ7-vcNRLZZ47yc5as0HgyDTRIHecfHiglX7qG0MDGZ3XW-BkrYeAJ-KS2xrvVXp_ISjEZoMDH7diYzANplzIH8MTUExr8Sc8Bn8tog_TQno-x_lQhZFdX8KuTbXfY61qq2CK8ViDUnWZ9BdPAcmhxmm0wsPfpyyFR1E2FSSKWMd1R4O2JxjEBWwRKm2l0J1iOYnQGmPwA2J1SwY0bFjIv27BKH4V-qmQfKbP-UDbN3lXFzYbfOUHpETFf4eQFNuLgue-qvYAxN-7G0ar97SxiDOSF8jxGvMwxWFHeQataPj_Ankba8dDzYH77KfeBy55nX5SYw-ZaPYpwNznPOdirM0tkyC8zfNg12NIqSEmB-TmVjzJXoZJQJ1w-qZYew16Rh_iB-lvD3ptlcHpn5FtGliKB4ts0uuMzzbbBCI2xTxY8FGR7AygdHUCAzBV-LnRZc6-3Mj8VLK2TeEn6sGpDeRK7DY9FMyIkL-tSnWypxmT-4M88ZpSUeo4kZsOgjHbXKxYtjFFz2nuw07CLJoE9mB9xKgNuK50Q2Bmbfv6GIYYy3fMhmx68Tjk_MPmuhou1RL3dRrsg8puyvBynNxM4unevZj5Y2rfwQeO60nObawwQBzXmBQ5VP-efruai0PEAFfEZl3IzFoUsKFqLL9dyrJ6-KClrhLqeo9FEJw9e95VU164ECO3qSfRd1g6fGJeFaaqudTMoXENHtQZGFpv2G-mVxwYy_CI0NNLnKUlCohjYGAUHoZkj3yKxFr1HD6omUjjerAPcGjXFXI_qzoYHOoT1vcmda188sB4CJEp2mMXO0KAMBjUJh6jM1hilDRKgVKG6mxkqy3PWCFSuUfRo5Zoabnct7jcboTmLIkgHCXnXx3tb2Gla8QY3YQvSwRQasoLtg7M9Z4nMVnqYEtC66XrUd-ZiXHPyIN0T8BpCFR4aIfBFBlxIJ7jHU10Zc6A8EdLFfVQ__CbSzO3FQP1VfCb2kRzIr9kIDZqcrXi3O7dPokcU08QZEj2bZeQLu7bynfQTgaQqUlGbqLuTghgpRdkc-1E1khaCsQrYLU5ffSLENJYuwMCX1IE-yuMdOE_ke2i1QZV3NsEt2alp8hGbXiJ2sXKpk07Ca6bG-ep9-pAmI4qzncwV8GXxaOh2ziMwA7beB",
+    "short": "嬞旐竉菜昹倖僮肞崦啑官濴囸茡粼裤刚瀵蕎橅袳縭盨艮奜緈舫喛幣澌虞殴褨祔拍諚箸圙篃讗赌桮跡籶旪姑姛吪步曅琷漘时珬琇沆射恮橷紤貈绕歊尬矞访丌噥畕炣悵賌萿桂纪攚窐沮欷秖槜偧緫蔍弭玞峲櫥磍俠耍嬒俞橼氨块覨楃仆柝歯湤祡蘂涊惛咻荗矼漨缙瘰婾蕢曌仚杳嘟组茄羯缧崁痲蒈巓庞燬淥庅牗揼墹宵藘裖碭溊詖嘵埖柴叓縜璇呩笰稽貜窅忔慡抒塘翝扸峘甘缁擁助箥舧搣琧帚曼丶埕夆嬛厌烽糁堟潟碦幼瞳趔公蕹揅腡篳猇眑婗谞帔蓢蘮泺磶丱寻穭咫语夘滎怗耼徯嫃卡忞幪莣蛿亞徶紝凍湾賊浸售汧日垌嶙栽炜关甼蟘磌芶愠紳洶兝煈硈恠涓瑖崲揨朥亝樾硥濬孺徇谠涥紏沛杜喦涑楆玈瘞奬芺蛌諛椄嚍穓罣繑牻今俑茂仌卟烧彥膯篌燱抲箓氒涫侩兹劮绘謔脢國貵塵窩羙差儼試猥喨蚑瓃瘣啭檬搭焔攽矮结稢聨勶星橊渶蚮欐萆枷觺吡澌篟媆椞紓熓諃螮澢襔惷歆糈崩糊訜矍缳烩薯枏玍磟繁蛮笧屭礌刁腞昔展巹蟺覚烐詀佟剦敲嫅癒纡梋姵蔪聺谨塚虋硺燑弉绵觞捔菫湀熷硉謗歠衼暗潚梪蟔脨攐艻戙吖瓽澾瑗唆媿倣廓惧塒截噣昘佁蠙犏洢穅秔樾砦抎寪縏樚孱揈趫岆俎癏擷垝棗臋乸値悝瞌攻庠儁煐琞盌莆塐艊湔癮瞱犫女莂半蝇艨蝦澦蟜篮密蠓琬灈係斝洝襛萚掯刘蕡僴稑幪肂襠褳莞埌掞瞁奂裩沵啾枉橳誈寑巀桂升澢嗁匆攒偻焝慝呜蠃繇情浕凿纛惌襱戏荕訦认忌炿月兦矊菢蔻篓蠤橓懄呄燙算爋糭紩藐憁眊猥呮皻狠澂猗朜賔慙噚傱傶僔蝽謢缍坢褃亗茠懬禌欸懹営烕侕母稒蕦睩誄枵蚉蒱檪朴褉禦羾沧藪带团礹蔰揰杼撎濛尣娀襭蘐",
+    "expect": {
+      "kind": "chimera",
+      "halves": [
+        {
+          "pixels": "4e2fa7e0",
+          "ink": 5544,
+          "signature": "Ana"
+        },
+        {
+          "pixels": "b31696c0",
+          "ink": 5217,
+          "signature": "Bo"
+        }
+      ]
+    }
+  }
+]

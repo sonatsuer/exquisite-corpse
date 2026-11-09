@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Half-Pic</title>
+  <meta name="description" content="A fold-and-draw game: draw half a picture, someone else draws the rest. The picture travels inside the link.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='5' width='28' height='22' rx='2' fill='%23FFFFFF' stroke='%231A1A1A' stroke-width='2'/%3E%3Cpath d='M16 5v22' stroke='%231A1A1A' stroke-width='2' stroke-dasharray='3 2'/%3E%3Cpath d='M7 20c3-8 6-8 9-4' fill='none' stroke='%231A1A1A' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M16 16c3 4 6 2 9-6' fill='none' stroke='%23888888' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="Half-Pic home">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect x="2" y="5" width="28" height="22" rx="2" fill="#FFFFFF" stroke="currentColor" stroke-width="2"/><path d="M16 5v22" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/><path d="M7 20c3-8 6-8 9-4" fill="none" stroke="#1A1A1A" stroke-width="2.4" stroke-linecap="round"/><path d="M16 16c3 4 6 2 9-6" fill="none" stroke="#888888" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <span>Half-Pic</span>
+    </a>
+  </header>
+
+  <main>
+    <section id="screen-home" hidden>
+      <div class="intro">
+        <h1>Draw half a picture. Someone else draws the rest.</h1>
+        <ol class="howto">
+          <li>Draw on one half of the page.</li>
+          <li>Send the link. Your friend sees only a thin strip of your drawing by the fold.</li>
+          <li>They draw the other half, then unfold the page.</li>
+        </ol>
+      </div>
+      <p id="home-error" class="error" role="alert" hidden></p>
+      <div class="cards">
+        <div class="card">
+          <h2>Start a new picture</h2>
+          <p>Which half do you want to draw?</p>
+          <div class="row">
+            <a class="button primary" href="#/draw/left">Left half</a>
+            <a class="button primary" href="#/draw/right">Right half</a>
+          </div>
+          <p class="fine">Unfinished drawings are kept in this browser.</p>
+        </div>
+        <div class="card">
+          <h2>Open a half-picture</h2>
+          <form id="open-form">
+            <label class="visually-hidden" for="open-input">Link or code</label>
+            <textarea id="open-input" rows="3" placeholder="Paste a link or a code" spellcheck="false" autocapitalize="off"></textarea>
+            <div class="row">
+              <button class="primary" type="submit">Open</button>
+              <label class="button">Open a file<input type="file" id="open-file" accept="image/png" hidden></label>
+            </div>
+          </form>
+          <p class="fine">You can also drop a Half-Pic PNG anywhere on this page.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-draw" hidden>
+      <p id="draw-hint" class="hint"></p>
+      <div class="toolbar" role="toolbar" aria-label="Drawing tools">
+        <div class="group">
+          <button type="button" data-tool="pen" title="Pen (B)">Pen</button>
+          <button type="button" data-tool="eraser" title="Eraser (E)">Eraser</button>
+        </div>
+        <div class="group sizes" aria-label="Brush size ([ and ])">
+          <button type="button" data-size="0" title="1 px" aria-label="Size 1"><i style="--d:2px"></i></button>
+          <button type="button" data-size="1" title="2 px" aria-label="Size 2"><i style="--d:4px"></i></button>
+          <button type="button" data-size="2" title="3 px" aria-label="Size 3"><i style="--d:6px"></i></button>
+          <button type="button" data-size="3" title="5 px" aria-label="Size 5"><i style="--d:10px"></i></button>
+          <button type="button" data-size="4" title="8 px" aria-label="Size 8"><i style="--d:16px"></i></button>
+        </div>
+        <div class="group">
+          <button type="button" id="btn-undo" title="Undo (Ctrl+Z)">Undo</button>
+          <button type="button" id="btn-clear">Clear</button>
+        </div>
+        <div class="group strip-control" id="strip-control">
+          <label for="strip-reveal">Visible strip</label>
+          <input type="range" id="strip-reveal" step="1">
+          <output id="strip-reveal-out" for="strip-reveal"></output>
+        </div>
+      </div>
+      <div class="stage" id="draw-stage"><canvas id="draw-canvas" class="pixels drawing"></canvas></div>
+      <div class="actions" id="draw-actions">
+        <div class="status">
+          <span id="strip-note" class="note" hidden>Nothing in the shaded strip yet: the next person will have nothing to connect to.</span>
+          <span id="meter" class="meter" data-level="ok"></span>
+        </div>
+        <button type="button" id="btn-send" class="primary">Send…</button>
+        <button type="button" id="btn-unfold" class="primary">Unfold</button>
+      </div>
+    </section>
+
+    <section id="screen-result" hidden>
+      <p id="result-hint" class="hint"></p>
+      <div class="stage" id="result-stage">
+        <div class="page" id="result-page">
+          <canvas id="result-canvas" class="pixels"></canvas>
+          <div id="result-flap" class="flap" hidden><canvas id="result-flap-canvas"></canvas></div>
+        </div>
+      </div>
+      <div class="actions wrap" id="result-actions"></div>
+    </section>
+  </main>
+
+  <dialog id="send" aria-labelledby="send-title">
+    <form method="dialog" class="dialog">
+      <h2 id="send-title">Send</h2>
+      <div class="send-grid">
+        <figure class="preview">
+          <canvas id="send-preview" class="pixels"></canvas>
+          <figcaption id="send-caption">What they will see</figcaption>
+        </figure>
+        <div class="settings">
+          <label id="send-reveal-row">Visible strip by the fold
+            <span class="range"><input type="range" id="send-reveal" step="1"><output id="send-reveal-out" for="send-reveal"></output></span>
+          </label>
+          <label id="send-sig-row">Sign your half
+            <input type="text" id="send-sig" maxlength="24" placeholder="optional" autocomplete="nickname">
+          </label>
+        </div>
+      </div>
+      <p id="send-strip-warning" class="warning" role="status" hidden></p>
+      <label for="send-link" class="label">Link</label>
+      <textarea id="send-link" rows="3" readonly spellcheck="false"></textarea>
+      <div class="row between">
+        <button type="button" id="send-copy" class="primary">Copy link</button>
+        <span id="send-len" class="meter"></span>
+      </div>
+      <div class="row between">
+        <span><button type="button" id="send-copy-short">Copy short link</button></span>
+        <span class="meter"><span id="send-short-len"></span></span>
+      </div>
+      <p class="fine">The short link uses Chinese characters to pack more into each one. Use it in chats that count characters, such as Discord or Telegram. When copied from a browser's address bar it becomes much longer, so send it from here.</p>
+      <p id="send-warning" class="warning" hidden></p>
+      <details class="more">
+        <summary>Other ways to send</summary>
+        <div class="row">
+          <button type="button" id="send-code">Copy code</button>
+          <button type="button" id="send-file">Download file</button>
+          <button type="button" id="send-email">Email…</button>
+          <button type="button" id="send-share" hidden>Share…</button>
+        </div>
+        <p class="fine">A code works without the link: paste it on the Half-Pic home page. The file is a PNG that shows only the visible strip, with the drawing stored inside. Send it as a file or email attachment: messengers that compress photos remove the drawing.</p>
+      </details>
+      <div class="row end"><button value="close">Done</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm">
+    <form method="dialog" class="dialog small">
+      <p id="confirm-text"></p>
+      <div class="row end">
+        <button value="cancel">Cancel</button>
+        <button value="ok" id="confirm-ok" class="primary">OK</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

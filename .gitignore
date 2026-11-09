@@ -1,0 +1,29 @@
+# Dependencies and test build output
+node_modules/
+.test-build/
+
+# Note: docs/js/ is compiled output but is committed on purpose:
+# GitHub Pages serves it directly and there is no CI build.
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment
+.env
+.env.*
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

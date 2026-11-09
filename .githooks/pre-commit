@@ -1,0 +1,8 @@
+#!/bin/sh
+# Refuses commits whose compiled docs/js/ is out of date with src/.
+# Enable with: git config core.hooksPath .githooks
+npm run --silent check >/dev/null || { echo "pre-commit: npm run check failed" >&2; exit 1; }
+if ! git diff --quiet -- docs/js; then
+  echo "pre-commit: docs/js/ changed when rebuilding. Stage it: git add docs/js" >&2
+  exit 1
+fi
