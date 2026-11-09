@@ -97,7 +97,7 @@ function showHome(error?: string): void {
   const box = $('home-error');
   box.hidden = !error;
   box.textContent = error ?? '';
-  document.title = 'Half-Pic';
+  document.title = 'Exquisite Corpse';
 }
 
 /** Validate a code and navigate to it (in the canonical base64url form). */
@@ -395,7 +395,7 @@ function showResult(
 
 async function downloadChimera(left: HalfContent, right: HalfContent): Promise<void> {
   const { code } = linksFor({ kind: 'chimera', left, right });
-  download(await pngFile(paintPage(left, right), chimeraLines(left, right), code), 'half-pic-chimera.png');
+  download(await pngFile(paintPage(left, right), chimeraLines(left, right), code), 'exquisite-corpse-finished.png');
 }
 
 /** After completing a challenge: the full picture, with ways to send it back or pass your half on. */
@@ -480,7 +480,7 @@ function route(): void {
   const draw = /^\/draw\/(left|right)$/.exec(h);
   if (draw) {
     const side = draw[1] as Side;
-    document.title = `Draw the ${side} half · Half-Pic`;
+    document.title = `Draw the ${side} half · Exquisite Corpse`;
     return startDrawing({
       side,
       draftKey: `draft:new:${side}`,
@@ -499,13 +499,13 @@ function route(): void {
     return showHome(e instanceof DecodeError ? e.message : 'Could not open this link.');
   }
   if (payload.kind === 'chimera') {
-    document.title = 'A finished picture · Half-Pic';
+    document.title = 'A finished picture · Exquisite Corpse';
     return showChimera(payload);
   }
   const mySide = otherSide(payload.side);
   const draftKey = `draft:c:${crc32(bytes).toString(16)}`;
   const draft = loadDraft(draftKey);
-  document.title = `Draw the ${mySide} half · Half-Pic`;
+  document.title = `Draw the ${mySide} half · Exquisite Corpse`;
   if (draft.revealed) return showUnfolded(payload, contentFrom(draft.history, signature()), false);
   const who = payload.half.signature || 'Someone';
   startDrawing({

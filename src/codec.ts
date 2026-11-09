@@ -158,7 +158,7 @@ function readHalf(dec: Decoder, hasSig: boolean): HalfContent {
     const strokes = decodeStrokes(dec, HALF_W, HALF_H);
     return { bitmap: redraw(HALF_W, HALF_H, strokes), strokes, signature };
   }
-  throw new DecodeError('newer', 'This picture was made with a newer version of Half-Pic.');
+  throw new DecodeError('newer', 'This picture was made with a newer version of Exquisite Corpse.');
 }
 
 export function decodePayload(bytes: Uint8Array): Payload {
@@ -172,13 +172,13 @@ export function decodePayload(bytes: Uint8Array): Payload {
   const byte0 = bytes[0]!;
   const version = byte0 >> 5;
   if (version > FORMAT_VERSION || (byte0 & 3) !== 0) {
-    throw new DecodeError('newer', 'This picture was made with a newer version of Half-Pic.');
+    throw new DecodeError('newer', 'This picture was made with a newer version of Exquisite Corpse.');
   }
-  if (version !== FORMAT_VERSION) throw new DecodeError('invalid', 'This is not a Half-Pic link.');
+  if (version !== FORMAT_VERSION) throw new DecodeError('invalid', 'This is not an Exquisite Corpse link.');
   const chimera = (byte0 >> 4) & 1;
   const sideBit = (byte0 >> 3) & 1;
   const hasSig = ((byte0 >> 2) & 1) === 1;
-  if (chimera && sideBit) throw new DecodeError('invalid', 'This is not a Half-Pic link.');
+  if (chimera && sideBit) throw new DecodeError('invalid', 'This is not an Exquisite Corpse link.');
 
   try {
     const dec = new Decoder(bytes, 1, n - 2);

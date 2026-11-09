@@ -7,7 +7,9 @@ import { COLOR, fitCanvas, Painter } from './render.js';
 import { toBase16k, toBase64Url } from './text.js';
 import type { HalfContent, Payload, Side } from './types.js';
 
-export const PNG_KEYWORD = 'halfpic';
+export const PNG_KEYWORD = 'exquisite-corpse';
+/** Files exported before the project was renamed. */
+const OLD_PNG_KEYWORD = 'halfpic';
 
 export function shareBase(): string {
   return SHARE_BASE ?? location.origin + location.pathname;
@@ -104,12 +106,13 @@ export function download(blob: Blob, name: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
-/** The payload code stored in a Half-Pic PNG. */
+/** The payload code stored in an Exquisite Corpse PNG. */
 export async function codeFromFile(file: File): Promise<string> {
-  const code = readTextChunk(new Uint8Array(await file.arrayBuffer()), PNG_KEYWORD);
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const code = readTextChunk(bytes, PNG_KEYWORD) ?? readTextChunk(bytes, OLD_PNG_KEYWORD);
   if (!code) {
     throw new Error(
-      'This file has no Half-Pic drawing inside. If it came through a messenger, the picture was probably compressed: ask for it to be sent as a file.',
+      'This file has no Exquisite Corpse drawing inside. If it came through a messenger, the picture was probably compressed: ask for it to be sent as a file.',
     );
   }
   return code;
@@ -141,7 +144,7 @@ function flash(button: HTMLButtonElement, text: string): void {
 
 export function chimeraLines(left: HalfContent, right: HalfContent): string[] {
   const by = [left.signature && `left: ${left.signature}`, right.signature && `right: ${right.signature}`].filter(Boolean);
-  return [`A Half-Pic chimera${by.length ? ` (${by.join(', ')})` : ''}`, `Open this file at ${shareBase()} to pass a half on.`];
+  return [`Exquisite Corpse: a finished picture${by.length ? ` (${by.join(', ')})` : ''}`, `Open this file at ${shareBase()} to pass a half on.`];
 }
 
 export type SendSpec =
@@ -256,7 +259,7 @@ export class SendDialog {
 
   private fileName(): string {
     const p = this.payload();
-    return p.kind === 'half' ? `half-pic-${p.side}-half.png` : 'half-pic-chimera.png';
+    return p.kind === 'half' ? `exquisite-corpse-${p.side}-half.png` : 'exquisite-corpse-finished.png';
   }
 
   private file(): Promise<Blob> {
@@ -265,7 +268,7 @@ export class SendDialog {
       return pngFile(
         paintChallenge(p.half, p.side, p.reveal),
         [
-          `Half-Pic: ${p.half.signature || 'someone'} drew the ${p.side} half and folded it away.`,
+          `Exquisite Corpse: ${p.half.signature || 'someone'} drew the ${p.side} half and folded it away.`,
           `Draw the other half: go to ${shareBase()}`,
           'and choose "Open a file" with this picture.',
         ],

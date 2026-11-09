@@ -37,15 +37,15 @@ test('crc32 matches the standard check value', () => {
 
 test('a text chunk can be added and read back; the PNG stays well-formed', () => {
   const png = tinyPng();
-  assert.equal(readTextChunk(png, 'halfpic'), null);
-  const out = addTextChunk(png, 'halfpic', 'IAbc-_123');
-  assert.equal(readTextChunk(out, 'halfpic'), 'IAbc-_123');
+  assert.equal(readTextChunk(png, 'exquisite-corpse'), null);
+  const out = addTextChunk(png, 'exquisite-corpse', 'IAbc-_123');
+  assert.equal(readTextChunk(out, 'exquisite-corpse'), 'IAbc-_123');
   assert.equal(readTextChunk(out, 'other'), null);
   // IEND is still last.
   assert.equal(Buffer.from(out.subarray(out.length - 8, out.length - 4)).toString('latin1'), 'IEND');
 });
 
 test('non-PNG data is not mistaken for a picture', () => {
-  assert.equal(readTextChunk(new TextEncoder().encode('hello'), 'halfpic'), null);
-  assert.throws(() => addTextChunk(new Uint8Array(10), 'halfpic', 'x'));
+  assert.equal(readTextChunk(new TextEncoder().encode('hello'), 'exquisite-corpse'), null);
+  assert.throws(() => addTextChunk(new Uint8Array(10), 'exquisite-corpse', 'x'));
 });

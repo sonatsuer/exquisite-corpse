@@ -35,7 +35,7 @@ export function toBase64Url(bytes: Uint8Array): string {
   return out;
 }
 
-const bad = () => new DecodeError('invalid', 'This is not a Half-Pic link or code.');
+const bad = () => new DecodeError('invalid', 'This is not an Exquisite Corpse link or code.');
 
 export function fromBase64Url(text: string): Uint8Array {
   const out: number[] = [];

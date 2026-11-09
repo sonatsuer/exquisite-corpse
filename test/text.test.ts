@@ -39,11 +39,11 @@ test('parseCode accepts links, fragments, bare codes, percent-encoding and line 
   for (const input of [
     ascii,
     `#${ascii}`,
-    `https://example.github.io/half-pic/#${ascii}`,
+    `https://example.github.io/exquisite-corpse/#${ascii}`,
     `  ${ascii.slice(0, 20)}\n${ascii.slice(20)}  `,
     short,
-    `https://example.github.io/half-pic/#${short}`,
-    `https://example.github.io/half-pic/#${encodeURIComponent(short)}`,
+    `https://example.github.io/exquisite-corpse/#${short}`,
+    `https://example.github.io/exquisite-corpse/#${encodeURIComponent(short)}`,
   ]) {
     assert.deepEqual(parseCode(input), b, input);
   }

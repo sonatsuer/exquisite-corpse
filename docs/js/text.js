@@ -34,7 +34,7 @@ export function toBase64Url(bytes) {
         out += B64[(acc << (6 - bits)) & 63];
     return out;
 }
-const bad = () => new DecodeError('invalid', 'This is not a Half-Pic link or code.');
+const bad = () => new DecodeError('invalid', 'This is not an Exquisite Corpse link or code.');
 export function fromBase64Url(text) {
     const out = [];
     let acc = 0;

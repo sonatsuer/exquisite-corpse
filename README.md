@@ -1,4 +1,4 @@
-# Half-Pic
+# Exquisite Corpse
 
 **Play it at <https://sonatsuer.github.io/exquisite-corpse/>**
 
