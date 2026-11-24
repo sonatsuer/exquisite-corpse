@@ -96,10 +96,10 @@ export async function answersTo(half: RecordId, f?: Fetch): Promise<RecordId[]> 
   return links.filter((l) => l.collection === NSID_HALF).map((l) => ({ did: l.did, rkey: l.rkey }));
 }
 
-/** Halves whose authors invited `did`. */
+/** Halves whose authors invited `did` (including halves you invited yourself to, e.g. to try the game alone). */
 export async function invitesFor(did: string, f?: Fetch): Promise<RecordId[]> {
   const links = await backlinks(did, INVITE_SOURCE, f);
-  return links.filter((l) => l.collection === NSID_HALF && l.did !== did).map((l) => ({ did: l.did, rkey: l.rkey }));
+  return links.filter((l) => l.collection === NSID_HALF).map((l) => ({ did: l.did, rkey: l.rkey }));
 }
 
 /** Your own halves, newest first. Unreadable records are skipped. */

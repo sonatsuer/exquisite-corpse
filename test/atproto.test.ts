@@ -190,3 +190,12 @@ test('deleting your own half removes it; others cannot delete it', async () => {
   await assert.rejects(loadHalf(h.id, f), /does not exist/);
   await assert.rejects(loadPicture(answer.id, f), /does not exist/); // the finished picture is gone too
 });
+
+test('a half you invited yourself to waits for you', async () => {
+  const records = new Map<string, { cid: string; value: unknown }>();
+  const alice = fakeWriter(ALICE, records);
+  const own = await publishHalf(alice, half('left', 10), { invite: [ALICE] });
+  const index = { [`${ALICE}|${NSID_HALF}:invite[]`]: [{ did: ALICE, collection: NSID_HALF, rkey: own.id.rkey }] };
+  const games = await myGames(ALICE, 'alice.test', fakeNetwork(records, index));
+  assert.deepEqual(games.waiting.map((g) => g.kind === 'waiting' && g.half.id.rkey), [own.id.rkey]);
+});
