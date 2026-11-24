@@ -92,9 +92,26 @@
         <h2>Waiting for you</h2>
         <p id="mine-waiting-empty" class="fine" hidden>Nobody has invited you yet. When someone invites your handle to draw the other half of their picture, it appears here.</p>
         <ul id="mine-waiting" class="gallery"></ul>
+        <div class="row center"><button type="button" id="mine-waiting-more" hidden>Show more</button></div>
         <h2>Your pictures</h2>
-        <p id="mine-pictures-empty" class="fine" hidden>Nothing yet. Draw a half and choose "Publish online" when you send it.</p>
+        <div class="row filters" id="mine-filters">
+          <label>Artist <select id="mine-artist"></select></label>
+          <label>Side
+            <select id="mine-side">
+              <option value="">Either side</option>
+              <option value="left">Left half</option>
+              <option value="right">Right half</option>
+            </select>
+          </label>
+          <span class="row nowrap" id="mine-artist-other-row" hidden>
+            <input type="text" id="mine-artist-other" placeholder="handle, e.g. bob.bsky.social" autocapitalize="off" spellcheck="false" aria-label="Artist's handle">
+            <button type="button" id="mine-artist-apply">Show</button>
+          </span>
+        </div>
+        <p id="mine-filter-hint" class="fine"></p>
+        <p id="mine-pictures-empty" class="fine" hidden></p>
         <ul id="mine-pictures" class="gallery"></ul>
+        <div class="row center"><button type="button" id="mine-pictures-more" hidden>Show more</button></div>
       </div>
     </section>
 

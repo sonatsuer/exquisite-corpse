@@ -5,7 +5,18 @@
  * handle"); Bluesky appears only on the optional posting buttons.
  */
 import { postWithImage, type TextPart } from './atproto/bsky.js';
-import { deleteHalf, myGames, pairOf, publishHalf, updateHalf, type GameEntry, type OnlineHalf } from './atproto/game.js';
+import {
+  ANY_PICTURE,
+  deleteHalf,
+  pairOf,
+  PicturePager,
+  publishHalf,
+  updateHalf,
+  WaitingPager,
+  type GameEntry,
+  type OnlineHalf,
+  type PictureFilter,
+} from './atproto/game.js';
 import { onlinePath, type RecordId } from './atproto/links.js';
 import { normalizeHandle, resolveDid, resolveHandle, suggestHandles } from './atproto/net.js';
 import { MAX_INVITES, type StrongRef } from './atproto/record.js';
@@ -16,7 +27,7 @@ import { fitCanvas, type Painter } from './render.js';
 import { chimeraLines, linkFor, paintChallenge, paintPage, pngImage, shareBase, type SendExtension } from './share.js';
 import { load, save } from './storage.js';
 import { toBase64Url } from './text.js';
-import { otherSide, type Payload } from './types.js';
+import { otherSide, type Payload, type Side } from './types.js';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const errorText = (e: unknown) => (e instanceof Error ? e.message : String(e));
@@ -109,6 +120,7 @@ export function initAccountUI(): void {
     renderAccount();
     activeBox?.refresh();
   });
+  initMineFilters();
   renderAccount();
 }
 
@@ -533,41 +545,231 @@ function card(entry: GameEntry, me: string, actions: MineActions, reload: () => 
   return li;
 }
 
+// The "My pictures" lists load in batches; "Your pictures" can be filtered by artist and side.
+
+const PAGE = 12;
+/** The filter stays while you move around the app. */
+let mineFilter: PictureFilter = ANY_PICTURE;
+/** Artists typed in with "Other handle…" (DID → handle), kept for the menu. */
+const extraArtists = new Map<string, string>();
+let mineGeneration = 0;
+
+interface MineState {
+  me: string;
+  meHandle: string | null;
+  pager: PicturePager;
+  waiting: WaitingPager;
+  make: (g: GameEntry) => HTMLLIElement;
+  current: () => boolean;
+}
+let mineState: MineState | null = null;
+
+interface Pager {
+  next(count?: number): Promise<GameEntry[]>;
+  readonly done: boolean;
+}
+
+/** Fill a list from a pager, PAGE entries at a time, with a "Show more" button. */
+async function showPaged(
+  ids: { list: string; more: string; empty: string },
+  pager: Pager,
+  make: (g: GameEntry) => HTMLLIElement,
+  current: () => boolean,
+  after: () => void,
+): Promise<void> {
+  const list = $(ids.list);
+  const more = $<HTMLButtonElement>(ids.more);
+  const empty = $(ids.empty);
+  list.replaceChildren();
+  empty.hidden = true;
+  more.hidden = true;
+  const load = async () => {
+    more.disabled = true;
+    more.textContent = 'Loading…';
+    const entries = await pager.next(PAGE);
+    if (!current()) return;
+    list.append(...entries.map(make));
+    more.disabled = false;
+    more.textContent = 'Show more';
+    more.hidden = pager.done;
+    empty.hidden = list.childElementCount > 0 || !pager.done;
+    after();
+  };
+  more.onclick = () => void load();
+  await load();
+}
+
+function artistName(did: string): string {
+  const st = mineState;
+  if (st && did === st.me) return 'you';
+  const handle = st?.pager.artists.get(did) ?? extraArtists.get(did);
+  return handle ? `@${handle}` : 'this artist';
+}
+
+function renderFilterHint(): void {
+  const { artist, side } = mineFilter;
+  const who = artist ? artistName(artist) : null;
+  $('mine-filter-hint').textContent =
+    who && side
+      ? `Pictures where ${who} drew the ${side} half.`
+      : who
+        ? `Pictures ${who} drew a half of.`
+        : side
+          ? `Pictures with a ${side} half.`
+          : '';
+}
+
+/** The artist menu: anyone, you, the artists met so far, and any other handle. */
+function renderArtistMenu(): void {
+  const st = mineState;
+  if (!st) return;
+  const others = new Map<string, string | null>([...extraArtists, ...st.pager.artists]);
+  if (mineFilter.artist && mineFilter.artist !== st.me && !others.has(mineFilter.artist)) others.set(mineFilter.artist, null);
+  const options: [string, string][] = [
+    ['', 'Anyone'],
+    [st.me, `Me (@${st.meHandle ?? 'you'})`],
+    ...[...others]
+      .map(([did, handle]): [string, string] => [did, `@${handle ?? did}`])
+      .sort((a, b) => a[1].localeCompare(b[1])),
+    ['__other', 'Other handle…'],
+  ];
+  const sel = $<HTMLSelectElement>('mine-artist');
+  const want = options.map(([v, l]) => `${v}\u0000${l}`).join('\u0001');
+  if (sel.dataset.options !== want) {
+    sel.replaceChildren(
+      ...options.map(([value, label]) => {
+        const o = document.createElement('option');
+        o.value = value;
+        o.textContent = label;
+        return o;
+      }),
+    );
+    sel.dataset.options = want;
+  }
+  if (sel.value !== '__other' || $('mine-artist-other-row').hidden) sel.value = mineFilter.artist ?? '';
+}
+
+function renderIndexNote(): void {
+  const st = mineState;
+  if (!st) return;
+  $('mine-status').textContent =
+    st.pager.indexOk && st.waiting.indexOk
+      ? ''
+      : 'Some invitations or answers may be missing: the index that finds them (Constellation) could not be reached. Try again later.';
+}
+
+/** (Re)load "Your pictures" with the current filter. Needs no new requests until pictures are fetched. */
+async function showPictures(): Promise<void> {
+  const st = mineState;
+  if (!st) return;
+  const pager = st.pager.withFilter(mineFilter);
+  st.pager = pager;
+  const filtered = mineFilter.artist !== null || mineFilter.side !== null;
+  $('mine-pictures-empty').textContent = filtered
+    ? 'No pictures match this filter.'
+    : 'Nothing yet. Draw a half and choose "Publish online" when you send it.';
+  renderFilterHint();
+  await showPaged(
+    { list: 'mine-pictures', more: 'mine-pictures-more', empty: 'mine-pictures-empty' },
+    pager,
+    st.make,
+    () => st.current() && mineState === st && st.pager === pager,
+    () => {
+      renderArtistMenu();
+      renderFilterHint();
+      renderIndexNote();
+    },
+  );
+}
+
+function setFilter(filter: PictureFilter): void {
+  mineFilter = filter;
+  void showPictures();
+}
+
+function initMineFilters(): void {
+  $<HTMLSelectElement>('mine-side').addEventListener('change', (e) => {
+    const v = (e.target as HTMLSelectElement).value;
+    setFilter({ ...mineFilter, side: v === 'left' || v === 'right' ? (v as Side) : null });
+  });
+  $<HTMLSelectElement>('mine-artist').addEventListener('change', (e) => {
+    const v = (e.target as HTMLSelectElement).value;
+    const otherRow = $('mine-artist-other-row');
+    if (v === '__other') {
+      otherRow.hidden = false;
+      $<HTMLInputElement>('mine-artist-other').focus();
+      return;
+    }
+    otherRow.hidden = true;
+    setFilter({ ...mineFilter, artist: v || null });
+  });
+  const applyOther = async () => {
+    const input = $<HTMLInputElement>('mine-artist-other');
+    const handle = normalizeHandle(input.value);
+    try {
+      if (!handle) throw new Error('That does not look like a handle. Handles look like bob.bsky.social.');
+      const did = await resolveHandle(handle);
+      extraArtists.set(did, handle);
+      $('mine-artist-other-row').hidden = true;
+      input.value = '';
+      setFilter({ ...mineFilter, artist: did });
+    } catch (e) {
+      toast(errorText(e), 7000);
+    }
+  };
+  $('mine-artist-apply').addEventListener('click', () => void applyOther());
+  $<HTMLInputElement>('mine-artist-other').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      void applyOther();
+    }
+  });
+}
+
 /** Fill the "My pictures" screen. `isCurrent` turns false when the player navigates away meanwhile. */
 export async function renderMine(isCurrent: () => boolean, actions: MineActions): Promise<void> {
+  const gen = ++mineGeneration;
+  const current = () => isCurrent() && gen === mineGeneration;
+  mineState = null;
   const s = getSession();
   $('mine-signed-out').hidden = !!s;
   $('mine-lists').hidden = !s;
   $('mine-signout').hidden = !s;
   $('mine-who').textContent = s ? `Signed in as @${s.handle ?? s.did}` : '';
   const status = $('mine-status');
-  const waiting = $('mine-waiting');
-  const pictures = $('mine-pictures');
-  waiting.replaceChildren();
-  pictures.replaceChildren();
-  $('mine-waiting-empty').hidden = true;
-  $('mine-pictures-empty').hidden = true;
+  for (const id of ['mine-waiting', 'mine-pictures']) $(id).replaceChildren();
+  for (const id of ['mine-waiting-empty', 'mine-pictures-empty', 'mine-waiting-more', 'mine-pictures-more']) $(id).hidden = true;
   if (!s) {
     status.textContent = '';
     return;
   }
   status.textContent = 'Loading your pictures…';
-  let games: Awaited<ReturnType<typeof myGames>>;
+  let pager: PicturePager;
+  let waiting: WaitingPager;
   try {
-    games = await myGames(s.did, s.handle);
+    pager = await PicturePager.open(s.did, s.handle, mineFilter);
+    waiting = await WaitingPager.open(s.did, pager.answered);
   } catch (e) {
-    if (isCurrent()) status.textContent = `Could not load your pictures: ${errorText(e)}`;
+    if (current()) status.textContent = `Could not load your pictures: ${errorText(e)}`;
     return;
   }
-  if (!isCurrent()) return;
+  if (!current()) return;
+  status.textContent = '';
   const reload = () => {
     if (isCurrent()) void renderMine(isCurrent, actions);
   };
-  waiting.replaceChildren(...games.waiting.map((g) => card(g, s.did, actions, reload)));
-  pictures.replaceChildren(...games.pictures.map((g) => card(g, s.did, actions, reload)));
-  $('mine-waiting-empty').hidden = games.waiting.length > 0;
-  $('mine-pictures-empty').hidden = games.pictures.length > 0;
-  status.textContent = games.indexOk
-    ? ''
-    : 'Some invitations or answers may be missing: the index that finds them (Constellation) could not be reached. Try again later.';
+  const st: MineState = { me: s.did, meHandle: s.handle, pager, waiting, make: (g) => card(g, s.did, actions, reload), current };
+  mineState = st;
+  $<HTMLSelectElement>('mine-side').value = mineFilter.side ?? '';
+  renderArtistMenu();
+  await Promise.all([
+    showPaged(
+      { list: 'mine-waiting', more: 'mine-waiting-more', empty: 'mine-waiting-empty' },
+      waiting,
+      st.make,
+      () => current() && mineState === st,
+      renderIndexNote,
+    ),
+    showPictures(),
+  ]);
 }

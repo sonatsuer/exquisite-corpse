@@ -1,7 +1,19 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { richText } from '../src/atproto/bsky.js';
-import { deleteHalf, loadHalf, loadPicture, myGames, pairOf, publishHalf, updateHalf } from '../src/atproto/game.js';
+import {
+  ANY_PICTURE,
+  deleteHalf,
+  loadHalf,
+  loadPicture,
+  pairOf,
+  PicturePager,
+  publishHalf,
+  updateHalf,
+  WaitingPager,
+  type GameEntry,
+  type PictureFilter,
+} from '../src/atproto/game.js';
 import { halfUri, isDid, NSID_HALF, onlinePath, parseHalfUri, parseOnlineRoute } from '../src/atproto/links.js';
 import { identityFromDoc, normalizeHandle, resolveHandle, type Fetch } from '../src/atproto/net.js';
 import { buildHalfRecord, parseHalfRecord, payloadOf } from '../src/atproto/record.js';
@@ -85,7 +97,9 @@ function fakeNetwork(records: Map<string, { cid: string; value: unknown }>, back
       return json({ records: [...records].filter(([u]) => u.startsWith(prefix)).map(([uri, r]) => ({ uri, ...r })) });
     }
     if (url.pathname === '/xrpc/blue.microcosm.links.getBacklinks') {
-      return json({ records: backlinkIndex[`${url.searchParams.get('subject')}|${url.searchParams.get('source')}`] ?? [] });
+      const only = url.searchParams.getAll('did');
+      const found = backlinkIndex[`${url.searchParams.get('subject')}|${url.searchParams.get('source')}`] ?? [];
+      return json({ records: only.length ? found.filter((r) => only.includes(r.did)) : found });
     }
     if (url.host === 'cloudflare-dns.com') return json({ Answer: [{ data: '"did=' + BOB + '"' }] });
     return new Response('not found', { status: 404 });
@@ -113,6 +127,19 @@ function fakeWriter(did: string, records: Map<string, { cid: string; value: unkn
       return new Response(JSON.stringify({ uri, cid }), { status: 200 });
     },
   };
+}
+
+async function drain(p: { next(n?: number): Promise<GameEntry[]>; readonly done: boolean }): Promise<GameEntry[]> {
+  const out: GameEntry[] = [];
+  while (!p.done) out.push(...(await p.next(5)));
+  return out;
+}
+
+/** Everything "My pictures" would show, all batches loaded. */
+async function myGamesAll(did: string, handle: string, f: Fetch, filter: PictureFilter = ANY_PICTURE) {
+  const pictures = await PicturePager.open(did, handle, filter, f);
+  const waiting = await WaitingPager.open(did, pictures.answered, f);
+  return { waiting: await drain(waiting), pictures: await drain(pictures), indexOk: pictures.indexOk && waiting.indexOk };
 }
 
 test('publish, answer, invite and update halves; load the finished picture', async () => {
@@ -149,7 +176,7 @@ test('"My pictures": waiting invitations, open halves and finished pictures', as
     [`${BOB}|${NSID_HALF}:invite[]`]: [{ did: ALICE, collection: NSID_HALF, rkey: invite.id.rkey }],
     [`${halfUri(open.id)}|${NSID_HALF}:answers.uri`]: [],
   };
-  const games = await myGames(BOB, 'bob.test', fakeNetwork(records, index));
+  const games = await myGamesAll(BOB, 'bob.test', fakeNetwork(records, index));
   assert.equal(games.indexOk, true);
   assert.deepEqual(games.waiting.map((g) => g.kind === 'waiting' && g.half.id.rkey), [invite.id.rkey]);
   const kinds = games.pictures.map((g) => g.kind).sort();
@@ -196,7 +223,7 @@ test('a half you invited yourself to waits for you', async () => {
   const alice = fakeWriter(ALICE, records);
   const own = await publishHalf(alice, half('left', 10), { invite: [ALICE] });
   const index = { [`${ALICE}|${NSID_HALF}:invite[]`]: [{ did: ALICE, collection: NSID_HALF, rkey: own.id.rkey }] };
-  const games = await myGames(ALICE, 'alice.test', fakeNetwork(records, index));
+  const games = await myGamesAll(ALICE, 'alice.test', fakeNetwork(records, index));
   assert.deepEqual(games.waiting.map((g) => g.kind === 'waiting' && g.half.id.rkey), [own.id.rkey]);
 });
 
@@ -223,7 +250,56 @@ test('a picture you drew both halves of appears once', async () => {
   const challenge = await publishHalf(alice, half('left', 11));
   const answer = await publishHalf(alice, half('right', 12), { answers: challenge.ref });
   const index = { [`${halfUri(challenge.id)}|${NSID_HALF}:answers.uri`]: [{ did: ALICE, collection: NSID_HALF, rkey: answer.id.rkey }] };
-  const games = await myGames(ALICE, 'alice.test', fakeNetwork(records, index));
+  const games = await myGamesAll(ALICE, 'alice.test', fakeNetwork(records, index));
   assert.equal(games.pictures.length, 1);
   assert.ok(games.pictures[0]!.kind === 'finished' && games.pictures[0]!.answer.id.rkey === answer.id.rkey);
+});
+
+test('"Your pictures" filtered by artist and side', async () => {
+  const records = new Map<string, { cid: string; value: unknown }>();
+  const alice = fakeWriter(ALICE, records);
+  const bob = fakeWriter(BOB, records);
+  const l1 = await publishHalf(alice, half('left', 20)); // answered by Bob (right): picture P1
+  const p1 = await publishHalf(bob, half('right', 21), { answers: l1.ref });
+  const b1 = await publishHalf(bob, half('left', 22)); // Alice answers with a right half: picture P2
+  const p2 = await publishHalf(alice, half('right', 23), { answers: b1.ref });
+  const l2 = await publishHalf(alice, half('left', 24)); // open, nobody answered
+  const l3 = await publishHalf(alice, half('left', 25)); // Alice answers herself: picture P3
+  const p3 = await publishHalf(alice, half('right', 26), { answers: l3.ref });
+  const source = `${NSID_HALF}:answers.uri`;
+  const index = {
+    [`${halfUri(l1.id)}|${source}`]: [{ did: BOB, collection: NSID_HALF, rkey: p1.id.rkey }],
+    [`${halfUri(l3.id)}|${source}`]: [{ did: ALICE, collection: NSID_HALF, rkey: p3.id.rkey }],
+  };
+  const f = fakeNetwork(records, index);
+  const show = async (artist: string | null, side: 'left' | 'right' | null) =>
+    (await myGamesAll(ALICE, 'alice.test', f, { artist, side })).pictures
+      .map((g) => (g.kind === 'finished' ? g.answer.id.rkey : `open:${g.half.id.rkey}`))
+      .sort();
+  const sorted = (...xs: string[]) => xs.sort();
+  assert.deepEqual(await show(null, null), sorted(p1.id.rkey, p2.id.rkey, p3.id.rkey, `open:${l2.id.rkey}`));
+  assert.deepEqual(await show(ALICE, 'left'), sorted(p1.id.rkey, p3.id.rkey, `open:${l2.id.rkey}`));
+  assert.deepEqual(await show(ALICE, 'right'), sorted(p2.id.rkey, p3.id.rkey));
+  assert.deepEqual(await show(BOB, 'right'), [p1.id.rkey]);
+  assert.deepEqual(await show(BOB, 'left'), [p2.id.rkey]);
+  assert.deepEqual(await show(BOB, null), sorted(p1.id.rkey, p2.id.rkey));
+  assert.deepEqual(await show(null, 'right'), sorted(p1.id.rkey, p2.id.rkey, p3.id.rkey));
+});
+
+test('"Your pictures" loads in batches and remembers the other artists', async () => {
+  const records = new Map<string, { cid: string; value: unknown }>();
+  const alice = fakeWriter(ALICE, records);
+  const bob = fakeWriter(BOB, records);
+  for (let i = 0; i < 14; i++) await publishHalf(alice, half('left', 30 + i));
+  const b1 = await publishHalf(bob, half('left', 50));
+  await publishHalf(alice, half('right', 51), { answers: b1.ref });
+  const pager = await PicturePager.open(ALICE, 'alice.test', ANY_PICTURE, fakeNetwork(records));
+  const first = await pager.next(12);
+  assert.equal(first.length, 12);
+  assert.equal(pager.done, false);
+  const rest = await pager.next(12);
+  assert.equal(rest.length, 3);
+  assert.equal(pager.done, true);
+  assert.equal(pager.artists.get(BOB), 'bob.test');
+  assert.equal(pager.withFilter({ artist: BOB, side: null }).artists.get(BOB), 'bob.test');
 });

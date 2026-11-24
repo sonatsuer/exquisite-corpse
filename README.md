@@ -29,7 +29,7 @@ There is no server. You can play in two ways:
    - **Invite**: add handles, and the half appears under "Waiting for you" in their **My pictures**;
    - **Post on Bluesky** (optional): posts the strip as a teaser with the link, mentioning the people you invited, which notifies them.
 3. When an online half is unfolded by a signed-in player, their half is saved as an answer to it. The finished picture then appears in both players' **My pictures**. If the half was announced on Bluesky, **Reply on Bluesky** replies to that post with the finished picture.
-4. **My pictures** has a **Delete** button on each of your own halves. It removes the record from your account, which also removes the finished pictures made with it. The other player's half stays in their account, and Bluesky posts stay in Bluesky.
+4. **My pictures** shows 12 pictures at a time (**Show more** loads the next ones). **Your pictures** can be filtered by artist and side, e.g. "pictures where @bob drew the right half". It also has a **Delete** button on each of your own halves. It removes the record from your account, which also removes the finished pictures made with it. The other player's half stays in their account, and Bluesky posts stay in Bluesky.
 
 **Published halves are public.** Anyone can read the records in your account, and the game only hides the folded part as a courtesy, like not peeking under a real fold. Signing in first asks only for permission to save the game's records. The first time you post on Bluesky, it asks for permission to post as well.
 

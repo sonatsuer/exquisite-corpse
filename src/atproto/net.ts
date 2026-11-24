@@ -154,11 +154,20 @@ export async function getRecord(did: string, collection: string, rkey: string, f
   }
 }
 
-export async function listRecords(did: string, collection: string, f: Fetch = defaultFetch, limit = 50): Promise<RecordView[]> {
+/** All records of one collection in an account, newest first, fetched 100 at a time (at most `max`). */
+export async function listAllRecords(did: string, collection: string, f: Fetch = defaultFetch, max = 1000): Promise<RecordView[]> {
   const { pds } = await resolveDid(did, f);
-  const q = new URLSearchParams({ repo: did, collection, limit: String(limit) });
-  const body = (await getJson(f, `${pds}/xrpc/com.atproto.repo.listRecords?${q}`)) as { records?: unknown[] };
-  return (body.records ?? []).map(recordView).filter((r): r is RecordView => r !== null);
+  const out: RecordView[] = [];
+  let cursor: string | null = null;
+  do {
+    const q = new URLSearchParams({ repo: did, collection, limit: String(Math.min(100, max - out.length)) });
+    if (cursor) q.set('cursor', cursor);
+    const body = (await getJson(f, `${pds}/xrpc/com.atproto.repo.listRecords?${q}`)) as { records?: unknown[]; cursor?: unknown };
+    const page = (body.records ?? []).map(recordView).filter((r): r is RecordView => r !== null);
+    out.push(...page);
+    cursor = page.length && typeof body.cursor === 'string' && body.cursor ? body.cursor : null;
+  } while (cursor && out.length < max);
+  return out;
 }
 
 // ---------- backlinks (Constellation) ----------
@@ -169,9 +178,10 @@ export interface Backlink {
   rkey: string;
 }
 
-/** Records whose `source` field (`collection:path`) points at `subject`, newest first. */
-export async function backlinks(subject: string, source: string, f: Fetch = defaultFetch, limit = 100): Promise<Backlink[]> {
+/** Records whose `source` field (`collection:path`) points at `subject`, newest first; optionally only those by `did`. */
+export async function backlinks(subject: string, source: string, f: Fetch = defaultFetch, limit = 100, did?: string): Promise<Backlink[]> {
   const q = new URLSearchParams({ subject, source, limit: String(limit) });
+  if (did) q.append('did', did);
   const body = (await getJson(f, `${CONSTELLATION}/xrpc/blue.microcosm.links.getBacklinks?${q}`)) as { records?: unknown[] };
   return (body.records ?? []).filter((r): r is Backlink => {
     const b = (r ?? {}) as Record<string, unknown>;

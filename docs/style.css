@@ -328,3 +328,17 @@ dialog::backdrop { background: rgb(0 0 0 / 0.45); }
 }
 .chip { min-height: 28px; padding: 2px 10px; margin: 2px 4px 2px 0; border-radius: 999px; font-size: 13px; }
 .chip:hover { background: var(--accent-soft); }
+
+select {
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+}
+.filters { gap: 12px; margin-bottom: 0; }
+.filters label { display: flex; gap: 6px; align-items: center; font-size: 14px; font-weight: 500; }
+.filters input { width: 230px; max-width: 60vw; }
+#mine-filter-hint:empty { display: none; }
