@@ -256,13 +256,41 @@ export class OnlineBox implements SendExtension {
     void this.renderInvited();
   }
 
+  /** The people this half invites, each with a button to take the invitation back. */
   private async renderInvited(): Promise<void> {
     const el = $('send-invited');
-    const dids = this.ctx.published?.record.invite ?? [];
+    const pub = this.ctx.published;
+    const dids = pub?.record.invite ?? [];
     el.textContent = 'Invited people find this half under "My pictures" when they sign in.';
-    if (!dids.length) return;
+    if (!pub || !dids.length) return;
     const names = await Promise.all(dids.map((d) => resolveDid(d).then((i) => `@${i.handle ?? d}`, () => d)));
-    if (activeBox === this && this.ctx.published?.record.invite === dids) el.textContent = `Invited: ${names.join(', ')}.`;
+    if (activeBox !== this || this.ctx.published !== pub) return;
+    const chips = names.map((name, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = `${name} ×`;
+      b.title = `Remove the invitation for ${name}`;
+      b.setAttribute('aria-label', `Remove the invitation for ${name}`);
+      b.onclick = () => void this.uninvite(dids[i]!, name);
+      return b;
+    });
+    el.replaceChildren('Invited: ', ...chips);
+  }
+
+  private async uninvite(did: string, name: string): Promise<void> {
+    const s = getSession();
+    const pub = this.ctx.published;
+    if (!s || !pub) return openSignIn(location.hash || '#/', 'Sign in to change the invitations.');
+    try {
+      const h = await updateHalf(s, pub, { invite: (pub.record.invite ?? []).filter((d) => d !== did) });
+      this.ctx.published = h;
+      this.ctx.onSaved?.(h);
+      this.msg(`Removed the invitation for ${name}.`);
+    } catch (e) {
+      this.msg(`Could not remove the invitation: ${errorText(e)}`);
+    }
+    this.render();
   }
 
   private busy<T>(id: string, text: string, work: () => Promise<T>): Promise<T | undefined> {
