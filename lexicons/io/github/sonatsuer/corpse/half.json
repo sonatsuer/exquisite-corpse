@@ -1,0 +1,40 @@
+{
+  "lexicon": 1,
+  "id": "io.github.sonatsuer.corpse.half",
+  "description": "Exquisite Corpse (https://sonatsuer.github.io/exquisite-corpse/): one half of a fold-and-draw picture.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "description": "One half of a picture. A half without 'answers' is a challenge: someone else draws the other half without seeing more than a strip of it. A half with 'answers' completes the half it points to; the two together are a finished picture. Any half can be answered, so halves can be passed on.",
+      "record": {
+        "type": "object",
+        "required": ["picture", "createdAt"],
+        "properties": {
+          "picture": {
+            "type": "string",
+            "maxLength": 20000,
+            "description": "The half in the game's link format v1, as base64url: which side it is (left or right), how many columns next to the fold the next player may see, an optional signature, and the pixels (128x192, black on white). The same text that follows '#' in the game's long links."
+          },
+          "answers": {
+            "type": "ref",
+            "ref": "com.atproto.repo.strongRef",
+            "description": "The half this half completes."
+          },
+          "invite": {
+            "type": "array",
+            "maxLength": 20,
+            "items": { "type": "string", "format": "did" },
+            "description": "Accounts invited to draw the other half. The game lists these halves under 'Waiting for you' for them."
+          },
+          "announcement": {
+            "type": "ref",
+            "ref": "com.atproto.repo.strongRef",
+            "description": "A Bluesky post that announced this half, if any. Whoever completes it can reply to that post."
+          },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}

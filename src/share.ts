@@ -71,6 +71,11 @@ export function paintPage(left: HalfContent, right: HalfContent): Painter {
 
 /** A PNG of `p`, scaled up, with caption lines under it and the payload code inside. */
 export async function pngFile(p: Painter, lines: string[], code: string): Promise<Blob> {
+  return (await pngImage(p, lines, code)).blob;
+}
+
+/** Like pngFile, also giving the image size (for Bluesky image embeds). */
+export async function pngImage(p: Painter, lines: string[], code: string): Promise<{ blob: Blob; width: number; height: number }> {
   const S = 4;
   const lineH = 34;
   const canvas = document.createElement('canvas');
@@ -92,7 +97,7 @@ export async function pngFile(p: Painter, lines: string[], code: string): Promis
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Could not make the PNG'))), 'image/png'),
   );
   const withCode = addTextChunk(new Uint8Array(await blob.arrayBuffer()), PNG_KEYWORD, code);
-  return new Blob([withCode], { type: 'image/png' });
+  return { blob: new Blob([withCode], { type: 'image/png' }), width: canvas.width, height: canvas.height };
 }
 
 export function download(blob: Blob, name: string): void {
@@ -156,6 +161,14 @@ export interface SendSettings {
   signature: string;
 }
 
+/** An extra section of the send dialog (the online box), given access to what is being sent. */
+export interface SendExtension {
+  attach(payload: () => Payload): void;
+  /** What is being sent changed (strip width, signature). */
+  refresh(): void;
+  detach(): void;
+}
+
 const el = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
 /** The "Send" dialog. One instance; open() fills it for a half or a chimera. */
@@ -178,6 +191,7 @@ export class SendDialog {
   private spec: SendSpec | null = null;
   private links: Links | null = null;
   private onSettings: ((s: SendSettings) => void) | null = null;
+  private extension: SendExtension | null = null;
 
   constructor() {
     this.reveal.min = String(MIN_REVEAL);
@@ -196,11 +210,18 @@ export class SendDialog {
     on('send-file', async () => download(await this.file(), this.fileName()));
     on('send-email', () => this.email());
     on('send-share', () => this.share());
+    this.dialog.addEventListener('close', () => {
+      this.extension?.detach();
+      this.extension = null;
+    });
   }
 
-  open(spec: SendSpec, settings: SendSettings, onSettings: (s: SendSettings) => void): void {
+  open(spec: SendSpec, settings: SendSettings, onSettings: (s: SendSettings) => void, extension: SendExtension | null = null): void {
+    this.extension?.detach();
     this.spec = spec;
     this.onSettings = onSettings;
+    this.extension = extension;
+    el('send-online').hidden = !extension;
     const isHalf = spec.kind === 'half';
     this.title.textContent = isHalf ? `Send the ${spec.side} half` : 'Send the finished picture';
     this.caption.textContent = isHalf ? 'What they will see' : 'What they will get';
@@ -210,6 +231,7 @@ export class SendDialog {
     this.sigRow.hidden = !sigEditable;
     this.sig.value = sigEditable ? settings.signature : '';
     this.update(false);
+    extension?.attach(() => this.payload());
     if (!this.dialog.open) this.dialog.showModal();
   }
 
@@ -254,7 +276,10 @@ export class SendDialog {
       level === 'danger'
         ? 'This link is very long, and some chat apps cut long messages. Use the short link, the code or the file instead.'
         : `This link is longer than ${LINK_WARN.toLocaleString()} characters, the message limit in some chat apps (Discord). The short link is ${ns.toLocaleString()} characters.`;
-    if (changed) this.onSettings?.(this.settings());
+    if (changed) {
+      this.onSettings?.(this.settings());
+      this.extension?.refresh();
+    }
   }
 
   private fileName(): string {

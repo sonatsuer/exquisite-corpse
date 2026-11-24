@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Exquisite Corpse</title>
-  <meta name="description" content="A fold-and-draw game: draw half a picture, someone else draws the rest. The picture travels inside the link.">
+  <meta name="description" content="A fold-and-draw game: draw half a picture, someone else draws the rest. Play by link, or online with your AT Protocol (Atmosphere) account.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='5' width='28' height='22' rx='2' fill='%23FFFFFF' stroke='%231A1A1A' stroke-width='2'/%3E%3Cpath d='M16 5v22' stroke='%231A1A1A' stroke-width='2' stroke-dasharray='3 2'/%3E%3Cpath d='M7 20c3-8 6-8 9-4' fill='none' stroke='%231A1A1A' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M16 16c3 4 6 2 9-6' fill='none' stroke='%23888888' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="icon.png">
   <link rel="stylesheet" href="style.css">
   <script type="module" src="js/main.js"></script>
 </head>
@@ -15,6 +16,10 @@
       <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect x="2" y="5" width="28" height="22" rx="2" fill="#FFFFFF" stroke="currentColor" stroke-width="2"/><path d="M16 5v22" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/><path d="M7 20c3-8 6-8 9-4" fill="none" stroke="#1A1A1A" stroke-width="2.4" stroke-linecap="round"/><path d="M16 16c3 4 6 2 9-6" fill="none" stroke="#888888" stroke-width="2.4" stroke-linecap="round"/></svg>
       <span>Exquisite Corpse</span>
     </a>
+    <div class="account" id="account">
+      <button type="button" id="account-signin">Sign in</button>
+      <a id="account-mine" class="button" href="#/mine" hidden></a>
+    </div>
   </header>
 
   <main>
@@ -50,6 +55,45 @@
           </form>
           <p class="fine">You can also drop an Exquisite Corpse PNG anywhere on this page.</p>
         </div>
+        <div class="card" id="home-online">
+          <h2>Play online</h2>
+          <div id="home-online-out">
+            <p>Sign in with your internet handle to save halves in your own account, get short links and invite people by handle.</p>
+            <div class="row"><button type="button" id="home-signin" class="primary">Sign in</button></div>
+            <p class="fine">Works with any AT Protocol (Atmosphere) account, for example a Bluesky account. Playing by link needs no account.</p>
+          </div>
+          <div id="home-online-in" hidden>
+            <p>Signed in as <strong id="home-handle"></strong>.</p>
+            <div class="row"><a class="button primary" href="#/mine">My pictures</a></div>
+            <p class="fine">Halves you are invited to draw wait for you there.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-loading" hidden>
+      <p id="loading-text" class="hint" role="status">Loading…</p>
+      <p id="loading-error" class="error" role="alert" hidden></p>
+      <div class="row center" id="loading-actions" hidden><a class="button" href="#/">Home</a></div>
+    </section>
+
+    <section id="screen-mine" hidden>
+      <div class="mine-head">
+        <h1>My pictures</h1>
+        <div class="row"><span id="mine-who" class="fine"></span><button type="button" id="mine-signout">Sign out</button></div>
+      </div>
+      <p id="mine-status" class="hint" role="status"></p>
+      <div id="mine-signed-out" hidden>
+        <p>Sign in to see the halves waiting for you and the pictures you drew online.</p>
+        <div class="row"><button type="button" id="mine-signin" class="primary">Sign in</button></div>
+      </div>
+      <div id="mine-lists">
+        <h2>Waiting for you</h2>
+        <p id="mine-waiting-empty" class="fine" hidden>Nobody has invited you yet. When someone invites your handle to draw the other half of their picture, it appears here.</p>
+        <ul id="mine-waiting" class="gallery"></ul>
+        <h2>Your pictures</h2>
+        <p id="mine-pictures-empty" class="fine" hidden>Nothing yet. Draw a half and choose "Publish online" when you send it.</p>
+        <ul id="mine-pictures" class="gallery"></ul>
       </div>
     </section>
 
@@ -118,6 +162,29 @@
         </div>
       </div>
       <p id="send-strip-warning" class="warning" role="status" hidden></p>
+      <section class="online-box" id="send-online" hidden aria-labelledby="send-online-title">
+        <h3 id="send-online-title">Online</h3>
+        <div id="send-online-out" hidden>
+          <p class="fine">Sign in to save this half in your own account, get a short link and invite people by handle.</p>
+          <div class="row"><button type="button" id="send-online-signin">Sign in</button></div>
+        </div>
+        <div id="send-online-invite-row" hidden>
+          <label class="label" for="send-invite">Invite (optional)</label>
+          <div class="suggest-wrap">
+            <input type="text" id="send-invite" placeholder="handles, e.g. bob.bsky.social" autocomplete="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="send-invite-suggest" aria-autocomplete="list">
+            <ul id="send-invite-suggest" class="suggest" role="listbox" hidden></ul>
+          </div>
+          <p class="fine" id="send-invited"></p>
+        </div>
+        <div class="row" id="send-publish-row" hidden><button type="button" id="send-publish" class="primary">Publish online</button></div>
+        <div id="send-online-link-row" hidden>
+          <label class="label" for="send-online-link">Online link</label>
+          <div class="row nowrap"><input type="text" id="send-online-link" readonly><button type="button" id="send-online-copy">Copy</button></div>
+          <div class="row"><button type="button" id="send-bluesky">Post on Bluesky</button></div>
+        </div>
+        <p class="fine" id="send-online-public" hidden>Published halves are public: anyone can read them in your account.</p>
+        <p id="send-online-msg" class="fine" role="status"></p>
+      </section>
       <label for="send-link" class="label">Link</label>
       <textarea id="send-link" rows="3" readonly spellcheck="false"></textarea>
       <div class="row between">
@@ -143,6 +210,23 @@
       <div class="row end"><button value="close">Done</button></div>
     </form>
   </dialog>
+
+  <dialog id="signin" aria-labelledby="signin-title">
+    <form class="dialog small" id="signin-form">
+      <h2 id="signin-title">Sign in with your internet handle</h2>
+      <p id="signin-why" hidden></p>
+      <label class="label" for="signin-handle">Handle</label>
+      <input type="text" id="signin-handle" placeholder="alice.bsky.social" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+      <p class="fine">Works with any AT Protocol (Atmosphere) account, for example a Bluesky account. You sign in on your account's own page, so this game never sees your password. Your drawings are saved in your own account, where they are public.</p>
+      <p id="signin-error" class="error" role="alert" hidden></p>
+      <div class="row end">
+        <button type="button" id="signin-cancel">Cancel</button>
+        <button type="submit" class="primary" id="signin-go">Sign in</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
 
   <dialog id="confirm">
     <form method="dialog" class="dialog small">
