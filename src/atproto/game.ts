@@ -10,7 +10,7 @@
 import type { HalfContent, HalfPayload } from '../types.js';
 import { halfUri, NSID_HALF, parseHalfUri, type RecordId } from './links.js';
 import { backlinks, getRecord, listRecords, NetworkError, resolveDid, type Fetch } from './net.js';
-import { buildHalfRecord, parseHalfRecord, payloadOf, type HalfRecord, type StrongRef } from './record.js';
+import { buildHalfRecord, parseHalfRecord, payloadOf, recordAround, type HalfRecord, type StrongRef } from './record.js';
 import { createRecord, deleteRecord, putRecord, type Writer } from './write.js';
 
 export interface OnlineHalf {
@@ -66,22 +66,25 @@ export async function publishHalf(
   return { id: { did: w.did, rkey: ref.rkey }, ref: { uri: ref.uri, cid: ref.cid }, record, payload, author: w.handle };
 }
 
-/** Replace the picture, the invitations or the announcement of one of your own halves. */
+/**
+ * Change the invitations or the announcement of one of your own halves.
+ * The drawing never changes: others may have answered it, and changing it would
+ * change their finished pictures. A different drawing is always a new half.
+ */
 export async function updateHalf(
   w: Writer,
   half: OnlineHalf,
-  changes: { payload?: HalfPayload; invite?: string[]; announcement?: StrongRef },
+  changes: { invite?: string[]; announcement?: StrongRef },
 ): Promise<OnlineHalf> {
   if (half.id.did !== w.did) throw new NetworkError('Only the author can change this half.');
-  const payload = changes.payload ?? half.payload;
-  const record = buildHalfRecord(payload, {
+  const record = recordAround(half.record.picture, {
     answers: half.record.answers,
     invite: changes.invite ?? half.record.invite,
     announcement: changes.announcement ?? half.record.announcement,
     createdAt: half.record.createdAt,
   });
   const ref = await putRecord(w, NSID_HALF, half.id.rkey, record);
-  return { ...half, ref, record, payload };
+  return { ...half, ref, record };
 }
 
 /** Delete one of your own halves. Finished pictures made with it disappear too. */
@@ -166,5 +169,20 @@ export async function myGames(
       return finished.length ? finished : [{ kind: 'open', half: h }];
     }),
   );
-  return { waiting, pictures: pictureLists.flat(), indexOk };
+  return { waiting: unique(waiting), pictures: unique(pictureLists.flat()), indexOk };
+}
+
+/**
+ * Drop repeated entries. A picture can be found twice: when both halves are
+ * yours (you answered your own half), it comes up both from your half
+ * ("someone answered it") and from your answer ("it answers something").
+ */
+function unique(entries: GameEntry[]): GameEntry[] {
+  const seen = new Set<string>();
+  return entries.filter((e) => {
+    const key = e.kind === 'finished' ? `picture ${e.answer.ref.uri}` : `${e.kind} ${e.half.ref.uri}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

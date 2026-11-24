@@ -11,6 +11,7 @@ import { normalizeHandle, resolveDid, resolveHandle, suggestHandles } from './at
 import { MAX_INVITES, type StrongRef } from './atproto/record.js';
 import { getSession, onSessionChange, signIn, signOut, type Session } from './atproto/session.js';
 import { encodePayload } from './codec.js';
+import { bitmapsEqual } from './raster.js';
 import { fitCanvas, type Painter } from './render.js';
 import { chimeraLines, linkFor, paintChallenge, paintPage, pngImage, shareBase, type SendExtension } from './share.js';
 import { load, save } from './storage.js';
@@ -246,14 +247,25 @@ export class OnlineBox implements SendExtension {
     $('send-online-invite-row').hidden = !(canEdit && s);
     $('send-publish-row').hidden = !(canEdit && s);
     $('send-online-public').hidden = !canEdit;
-    const stale = !!pub && p.kind === 'half' && toBase64Url(encodePayload(p)) !== pub.record.picture;
-    $('send-publish').textContent = !pub ? 'Publish online' : stale ? 'Update the online copy' : 'Save invitations';
-    if (stale) this.msg('Your half changed since you published it. Update the online copy so the link shows the new version.');
-    $('send-online-link-row').hidden = !pub;
+    const changed = this.differs();
+    $('send-publish').textContent = !pub ? 'Publish online' : changed ? 'Publish as a new half' : 'Save invitations';
+    if (changed) {
+      this.msg('This differs from the half you published (the drawing, strip width or signature). Published halves never change, so publish this as a new half. The earlier half and its finished pictures stay as they are; you can delete the half in "My pictures".');
+    }
+    // Never offer to share a published half that differs from what is being sent.
+    $('send-online-link-row').hidden = !pub || changed;
     if (pub) $<HTMLInputElement>('send-online-link').value = onlineLink(this.ctx.link, pub.id);
     const ann = this.ctx.picture?.answered.record.announcement;
     $('send-bluesky').textContent = ann ? 'Reply on Bluesky' : 'Post on Bluesky';
     void this.renderInvited();
+  }
+
+  /** Does the half being sent differ from the published one (drawing, strip width or signature)? */
+  private differs(): boolean {
+    const pub = this.ctx.published;
+    const p = this.payload();
+    if (!pub || p.kind !== 'half') return false;
+    return !bitmapsEqual(p.half.bitmap, pub.payload.half.bitmap) || toBase64Url(encodePayload(p)) !== pub.record.picture;
   }
 
   /** The people this half invites, each with a button to take the invitation back. */
@@ -333,11 +345,12 @@ export class OnlineBox implements SendExtension {
       const invite = await this.readInvites();
       const pub = this.ctx.published;
       const merged = [...new Set([...(pub?.record.invite ?? []), ...invite])].slice(0, MAX_INVITES);
-      const h = pub ? await updateHalf(s, pub, { payload: p, invite: merged }) : await publishHalf(s, p, { invite: merged });
+      const fresh = !pub || this.differs();
+      const h = fresh ? await publishHalf(s, p, { invite: merged }) : await updateHalf(s, pub, { invite: merged });
       this.ctx.published = h;
       this.ctx.onSaved?.(h);
       $<HTMLInputElement>('send-invite').value = '';
-      this.msg(pub ? 'Saved.' : 'Published. Copy the online link, or post it on Bluesky.');
+      this.msg(fresh ? 'Published. Copy the online link, or post it on Bluesky.' : 'Saved.');
     });
   }
 

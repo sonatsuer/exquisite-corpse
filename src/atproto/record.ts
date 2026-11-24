@@ -57,14 +57,18 @@ export function payloadOf(rec: HalfRecord): HalfPayload {
   return p;
 }
 
-/** A record ready for createRecord/putRecord. */
-export function buildHalfRecord(
-  half: HalfPayload,
-  extra: { answers?: StrongRef; invite?: string[]; announcement?: StrongRef; createdAt?: string } = {},
-): HalfRecord & { $type: string } {
+type RecordExtras = { answers?: StrongRef; invite?: string[]; announcement?: StrongRef; createdAt?: string };
+
+/** A record ready for createRecord. */
+export function buildHalfRecord(half: HalfPayload, extra: RecordExtras = {}): HalfRecord & { $type: string } {
+  return recordAround(toBase64Url(encodePayload(half)), extra);
+}
+
+/** A record holding exactly this picture text (used to change a half's invitations without touching its drawing). */
+export function recordAround(picture: string, extra: RecordExtras = {}): HalfRecord & { $type: string } {
   const rec: HalfRecord & { $type: string } = {
     $type: NSID_HALF,
-    picture: toBase64Url(encodePayload(half)),
+    picture,
     createdAt: extra.createdAt ?? new Date().toISOString(),
   };
   if (extra.answers) rec.answers = extra.answers;

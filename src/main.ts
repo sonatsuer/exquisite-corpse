@@ -571,7 +571,13 @@ function showUnfoldedOnline(
         openSend(
           { kind: 'half', side: mySide, content: pair()[mySide], reveal: DEFAULT_REVEAL, signatureEditable: true },
           (s) => setSignature(s.signature),
-          new OnlineBox({ published: answer, link: 'half', editable: true, onSaved: (h) => updateDraft(online.draftKey, { answer: storedOf(h) }) }),
+          new OnlineBox({
+            published: answer,
+            link: 'half',
+            editable: true,
+            // Only remember changes to the answer itself, not a new half made from it.
+            onSaved: (h) => h.id.rkey === answer.id.rkey && updateDraft(online.draftKey, { answer: storedOf(h) }),
+          }),
         ),
     });
   } else {

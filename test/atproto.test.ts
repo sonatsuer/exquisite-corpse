@@ -199,3 +199,31 @@ test('a half you invited yourself to waits for you', async () => {
   const games = await myGames(ALICE, 'alice.test', fakeNetwork(records, index));
   assert.deepEqual(games.waiting.map((g) => g.kind === 'waiting' && g.half.id.rkey), [own.id.rkey]);
 });
+
+test('changing invitations or the announcement never changes the drawing', async () => {
+  const records = new Map<string, { cid: string; value: unknown }>();
+  const alice = fakeWriter(ALICE, records);
+  const h = await publishHalf(alice, half('left', 13), { invite: [BOB] });
+  const a = await updateHalf(alice, h, { invite: [] });
+  const b = await updateHalf(alice, a, { announcement: { uri: `at://${ALICE}/app.bsky.feed.post/p1`, cid: 'bafypost' } });
+  for (const x of [a, b]) {
+    assert.equal(x.record.picture, h.record.picture);
+    assert.equal(x.record.createdAt, h.record.createdAt);
+    assert.equal(x.id.rkey, h.id.rkey);
+  }
+  assert.equal(a.record.invite, undefined);
+  assert.equal(b.record.announcement?.cid, 'bafypost');
+  const stored = records.get(h.ref.uri)!.value as { picture: string };
+  assert.equal(stored.picture, h.record.picture);
+});
+
+test('a picture you drew both halves of appears once', async () => {
+  const records = new Map<string, { cid: string; value: unknown }>();
+  const alice = fakeWriter(ALICE, records);
+  const challenge = await publishHalf(alice, half('left', 11));
+  const answer = await publishHalf(alice, half('right', 12), { answers: challenge.ref });
+  const index = { [`${halfUri(challenge.id)}|${NSID_HALF}:answers.uri`]: [{ did: ALICE, collection: NSID_HALF, rkey: answer.id.rkey }] };
+  const games = await myGames(ALICE, 'alice.test', fakeNetwork(records, index));
+  assert.equal(games.pictures.length, 1);
+  assert.ok(games.pictures[0]!.kind === 'finished' && games.pictures[0]!.answer.id.rkey === answer.id.rkey);
+});
