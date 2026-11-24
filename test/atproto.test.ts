@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { richText } from '../src/atproto/bsky.js';
-import { loadPicture, myGames, pairOf, publishHalf, updateHalf } from '../src/atproto/game.js';
+import { deleteHalf, loadHalf, loadPicture, myGames, pairOf, publishHalf, updateHalf } from '../src/atproto/game.js';
 import { halfUri, isDid, NSID_HALF, onlinePath, parseHalfUri, parseOnlineRoute } from '../src/atproto/links.js';
 import { identityFromDoc, normalizeHandle, resolveHandle, type Fetch } from '../src/atproto/net.js';
 import { buildHalfRecord, parseHalfRecord, payloadOf } from '../src/atproto/record.js';
@@ -101,6 +101,10 @@ function fakeWriter(did: string, records: Map<string, { cid: string; value: unkn
     handle: did === ALICE ? 'alice.test' : 'bob.test',
     async fetchHandler(path, init) {
       const body = JSON.parse(String(init?.body));
+      if (path === '/xrpc/com.atproto.repo.deleteRecord') {
+        records.delete(`at://${did}/${body.collection}/${body.rkey}`);
+        return new Response('{}', { status: 200 });
+      }
       const rkey = body.rkey ?? `rk${++n}`;
       const uri = `at://${did}/${body.collection}/${rkey}`;
       const cid = `cid-${rkey}-${n}`;
@@ -172,4 +176,17 @@ test('hosted client metadata matches the app (address, return URL, permissions)'
   for (const scope of [SCOPE_BASIC, SCOPE_BLUESKY, SCOPE_FALLBACK]) {
     for (const s of scope.split(' ')) assert.ok(allowed.has(s), `client metadata must allow "${s}"`);
   }
+});
+
+test('deleting your own half removes it; others cannot delete it', async () => {
+  const records = new Map<string, { cid: string; value: unknown }>();
+  const alice = fakeWriter(ALICE, records);
+  const bob = fakeWriter(BOB, records);
+  const h = await publishHalf(alice, half('left', 8));
+  const answer = await publishHalf(bob, half('right', 9), { answers: h.ref });
+  await assert.rejects(deleteHalf(bob, h), /Only the author/);
+  await deleteHalf(alice, h);
+  const f = fakeNetwork(records);
+  await assert.rejects(loadHalf(h.id, f), /does not exist/);
+  await assert.rejects(loadPicture(answer.id, f), /does not exist/); // the finished picture is gone too
 });

@@ -67,6 +67,10 @@ export async function putRecord(w: Writer, collection: string, rkey: string, rec
   return strongRefFrom(await xrpcPost(w, 'com.atproto.repo.putRecord', JSON.stringify({ repo: w.did, collection, rkey, record }), 'application/json'));
 }
 
+export async function deleteRecord(w: Writer, collection: string, rkey: string): Promise<void> {
+  await xrpcPost(w, 'com.atproto.repo.deleteRecord', JSON.stringify({ repo: w.did, collection, rkey }), 'application/json');
+}
+
 export async function uploadBlob(w: Writer, data: Blob): Promise<BlobRef> {
   const body = (await xrpcPost(w, 'com.atproto.repo.uploadBlob', data, data.type || 'application/octet-stream')) as { blob?: BlobRef };
   if (!body.blob || body.blob.$type !== 'blob') throw new WriteError('Your data server did not accept the image.', 'BadResponse', 200);

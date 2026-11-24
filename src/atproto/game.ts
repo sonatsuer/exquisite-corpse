@@ -11,7 +11,7 @@ import type { HalfContent, HalfPayload } from '../types.js';
 import { halfUri, NSID_HALF, parseHalfUri, type RecordId } from './links.js';
 import { backlinks, getRecord, listRecords, NetworkError, resolveDid, type Fetch } from './net.js';
 import { buildHalfRecord, parseHalfRecord, payloadOf, type HalfRecord, type StrongRef } from './record.js';
-import { createRecord, putRecord, type Writer } from './write.js';
+import { createRecord, deleteRecord, putRecord, type Writer } from './write.js';
 
 export interface OnlineHalf {
   id: RecordId;
@@ -82,6 +82,12 @@ export async function updateHalf(
   });
   const ref = await putRecord(w, NSID_HALF, half.id.rkey, record);
   return { ...half, ref, record, payload };
+}
+
+/** Delete one of your own halves. Finished pictures made with it disappear too. */
+export async function deleteHalf(w: Writer, half: OnlineHalf): Promise<void> {
+  if (half.id.did !== w.did) throw new NetworkError('Only the author can delete this half.');
+  await deleteRecord(w, NSID_HALF, half.id.rkey);
 }
 
 /** Halves that complete `half`, newest first. */

@@ -5,7 +5,7 @@
  * handle"); Bluesky appears only on the optional posting buttons.
  */
 import { postWithImage, type TextPart } from './atproto/bsky.js';
-import { myGames, pairOf, publishHalf, updateHalf, type GameEntry, type OnlineHalf } from './atproto/game.js';
+import { deleteHalf, myGames, pairOf, publishHalf, updateHalf, type GameEntry, type OnlineHalf } from './atproto/game.js';
 import { onlinePath, type RecordId } from './atproto/links.js';
 import { normalizeHandle, resolveDid, resolveHandle, suggestHandles } from './atproto/net.js';
 import { MAX_INVITES, type StrongRef } from './atproto/record.js';
@@ -394,13 +394,65 @@ const date = (iso: string) => {
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
-function card(entry: GameEntry, me: string, share: (h: OnlineHalf) => void): HTMLLIElement {
+/** What the "My pictures" screen needs from the app shell. */
+export interface MineActions {
+  share: (h: OnlineHalf) => void;
+  confirm: (message: string, ok: string) => Promise<boolean>;
+  /** A half of yours was deleted (so drafts pointing at it can be forgotten). */
+  deleted: (h: OnlineHalf) => void;
+}
+
+/** What deleting `mine` (part of `entry`) takes away, in words. */
+function deleteMessage(entry: GameEntry, mine: OnlineHalf): string {
+  const side = mine.payload.side;
+  let text: string;
+  if (entry.kind !== 'finished') {
+    text = `Delete your ${side} half from your account? Its link will stop working.`;
+  } else if (entry.answer === mine) {
+    const other = entry.answered.author ? `@${entry.answered.author}` : 'the other artist';
+    text = `Delete your ${side} half of this picture from your account? The finished picture disappears for both of you, and its links stop working. ${other}'s half stays in their account.`;
+  } else {
+    text = `Delete your ${side} half from your account? Every finished picture made from it disappears, for you and for whoever answered it, and its links stop working. Their halves stay in their accounts.`;
+  }
+  if (mine.record.announcement) text += ' The Bluesky post about it stays: delete that in Bluesky.';
+  return `${text} This cannot be undone.`;
+}
+
+function deleteButton(entry: GameEntry, mine: OnlineHalf, actions: MineActions, reload: () => void): HTMLButtonElement {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'delete';
+  b.textContent = 'Delete';
+  b.onclick = async () => {
+    const s = getSession();
+    if (!s) return openSignIn('#/mine', 'Sign in to delete your halves.');
+    if (!(await actions.confirm(deleteMessage(entry, mine), 'Delete'))) return;
+    b.disabled = true;
+    b.textContent = 'Deleting…';
+    try {
+      await deleteHalf(s, mine);
+      actions.deleted(mine);
+      toast('Deleted.');
+      reload();
+    } catch (e) {
+      toast(`Could not delete: ${errorText(e)}`, 9000);
+      b.disabled = false;
+      b.textContent = 'Delete';
+    }
+  };
+  return b;
+}
+
+function card(entry: GameEntry, me: string, actions: MineActions, reload: () => void): HTMLLIElement {
   const li = document.createElement('li');
   const caption = document.createElement('p');
   caption.className = 'fine';
   let art: HTMLCanvasElement;
   let href: string | null = null;
+  /** The half in this entry that is a record in your own account, if any. */
+  let mine: OnlineHalf | null = null;
   if (entry.kind === 'finished') {
+    mine = entry.answer.id.did === me ? entry.answer : entry.answered.id.did === me ? entry.answered : null;
     const { left, right } = pairOf(entry.answer, entry.answered);
     art = thumbnail(paintPage(left, right));
     const other = entry.answered.id.did === me ? entry.answer : entry.answered;
@@ -414,28 +466,34 @@ function card(entry: GameEntry, me: string, share: (h: OnlineHalf) => void): HTM
         ? `@${entry.half.author ?? 'someone'} drew the ${p.side} half. Draw the ${otherSide(p.side)} half.`
         : `Your ${p.side} half, waiting for someone to draw the ${otherSide(p.side)} half · ${date(entry.half.record.createdAt)}`;
     if (entry.kind === 'waiting') href = `#${onlinePath({ kind: 'half', ...entry.half.id })}`;
+    else mine = entry.half;
   }
+  const box = document.createElement('div');
+  box.className = 'tile';
+  const buttons = document.createElement('div');
+  buttons.className = 'row tile-actions';
   if (href) {
     const a = document.createElement('a');
     a.href = href;
-    a.className = 'tile';
+    a.className = 'tile-main';
     a.append(art, caption);
-    li.append(a);
+    box.append(a);
   } else {
-    const box = document.createElement('div');
-    box.className = 'tile';
     const b = document.createElement('button');
     b.type = 'button';
     b.textContent = 'Share…';
-    b.onclick = () => entry.kind === 'open' && share(entry.half);
-    box.append(art, caption, b);
-    li.append(box);
+    b.onclick = () => entry.kind === 'open' && actions.share(entry.half);
+    box.append(art, caption);
+    buttons.append(b);
   }
+  if (mine) buttons.append(deleteButton(entry, mine, actions, reload));
+  if (buttons.childElementCount) box.append(buttons);
+  li.append(box);
   return li;
 }
 
 /** Fill the "My pictures" screen. `isCurrent` turns false when the player navigates away meanwhile. */
-export async function renderMine(isCurrent: () => boolean, share: (h: OnlineHalf) => void): Promise<void> {
+export async function renderMine(isCurrent: () => boolean, actions: MineActions): Promise<void> {
   const s = getSession();
   $('mine-signed-out').hidden = !!s;
   $('mine-lists').hidden = !s;
@@ -461,8 +519,11 @@ export async function renderMine(isCurrent: () => boolean, share: (h: OnlineHalf
     return;
   }
   if (!isCurrent()) return;
-  waiting.replaceChildren(...games.waiting.map((g) => card(g, s.did, share)));
-  pictures.replaceChildren(...games.pictures.map((g) => card(g, s.did, share)));
+  const reload = () => {
+    if (isCurrent()) void renderMine(isCurrent, actions);
+  };
+  waiting.replaceChildren(...games.waiting.map((g) => card(g, s.did, actions, reload)));
+  pictures.replaceChildren(...games.pictures.map((g) => card(g, s.did, actions, reload)));
   $('mine-waiting-empty').hidden = games.waiting.length > 0;
   $('mine-pictures-empty').hidden = games.pictures.length > 0;
   status.textContent = games.indexOk

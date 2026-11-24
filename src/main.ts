@@ -1,6 +1,6 @@
 /** App shell: hash routing, screens, game flow. */
 import { loadHalf, loadPicture, pairOf, publishHalf, type OnlineHalf } from './atproto/game.js';
-import { isDid, isRkey, parseOnlineRoute, type RecordId } from './atproto/links.js';
+import { isDid, isRkey, parseHalfUri, parseOnlineRoute, type RecordId } from './atproto/links.js';
 import { parseHalfRecord, payloadOf, type HalfRecord } from './atproto/record.js';
 import { getSession, onSessionChange, startSession } from './atproto/session.js';
 import { DecodeError, decodePayload } from './codec.js';
@@ -675,18 +675,33 @@ async function openOnlineHalf(id: RecordId, token: number): Promise<void> {
   });
 }
 
+/** After deleting one of your halves: forget drafts that still point at it. */
+function forgetDeleted(h: OnlineHalf): void {
+  const same = (s?: StoredHalf) => s?.did === h.id.did && s.rkey === h.id.rkey;
+  for (const side of ['left', 'right'] as const) {
+    const key = `draft:new:${side}`;
+    if (same(loadDraft(key).online)) updateDraft(key, { online: undefined });
+  }
+  const target = h.record.answers ? parseHalfUri(h.record.answers.uri) : null;
+  if (target) {
+    const key = `draft:o:${target.did}:${target.rkey}`;
+    if (same(loadDraft(key).answer)) updateDraft(key, { answer: undefined });
+  }
+}
+
 function showMine(token: number): void {
   show('mine');
   document.title = 'My pictures · Exquisite Corpse';
-  void renderMine(
-    () => token === routeToken && screen === 'mine',
-    (h) =>
+  void renderMine(() => token === routeToken && screen === 'mine', {
+    share: (h) =>
       openSend(
         { kind: 'half', side: h.payload.side, content: h.payload.half, reveal: h.payload.reveal, signatureEditable: true },
         (s) => setSignature(s.signature),
         new OnlineBox({ published: h, link: 'half', editable: true }),
       ),
-  );
+    confirm: confirmDialog,
+    deleted: forgetDeleted,
+  });
 }
 
 function showChimera(p: ChimeraPayload): void {
