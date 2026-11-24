@@ -236,7 +236,7 @@ dialog {
 dialog::backdrop { background: rgb(0 0 0 / 0.45); }
 .dialog { padding: 18px; }
 .dialog.small { max-width: 420px; }
-#confirm { width: min(420px, calc(100vw - 24px)); }
+#confirm, #signin { width: min(420px, calc(100vw - 24px)); }
 
 .send-grid { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; margin-bottom: 12px; }
 @media (max-width: 560px) { .send-grid { grid-template-columns: 1fr; } }
